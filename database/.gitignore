@@ -1,1 +1,2 @@
 *.sqlite*
+/database/full-database-backup.sql

@@ -38,7 +38,10 @@ Route::prefix('admin/products')->group(function () {
     Route::get('/', [SanPhamController::class, 'index'])->name('products.index'); // Danh sách
     Route::get('/create', [SanPhamController::class, 'create'])->name('products.create'); // Form thêm mới
     Route::post('/store', [SanPhamController::class, 'store'])->name('products.store'); // Lưu mới
-   
+    Route::get('/{id}/edit', [SanPhamController::class, 'edit'])->name('products.edit'); // Form sửa
+    Route::put('/{id}', [SanPhamController::class, 'update'])->name('products.update'); // Cập nhật
+    Route::delete('/{id}', [SanPhamController::class, 'destroy'])->name('products.destroy'); // Xóa
+
 });
 
 require __DIR__.'/auth.php';
