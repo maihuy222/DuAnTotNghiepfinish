@@ -160,12 +160,6 @@
                             <label class="control-label">Mô tả sản phẩm</label>
                             <textarea class="form-control" name="description" id="mota" rows="6" placeholder="Nhập mô tả sản phẩm..."></textarea>
                         </div>
-
-
-                        <!-- Thêm CKEditor 4 -->
-                        
-
-
                         <div class="form-group col-md-12">
                             <button class="btn btn-primary" type="submit">Lưu lại</button>
                             <a class="btn btn-secondary" href="{{ route('products.index') }}">Hủy bỏ</a>
@@ -187,88 +181,45 @@
                     </script>
 
 </main>
-
-
-<!--
-  MODAL CHỨC VỤ 
--->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    data-backdrop="static" data-keyboard="false">
+<!-- Modal Thêm Danh Mục -->
+<div class="modal fade" id="adddanhmuc" tabindex="-1" role="dialog" aria-labelledby="addDanhMucLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group  col-md-12">
-                        <span class="thong-tin-thanh-toan">
-                            <h5>Thêm mới nhà cung cấp</h5>
-                        </span>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="control-label">Nhập tên chức vụ mới</label>
-                        <input class="form-control" type="text" required>
-                    </div>
+            <form method="POST" action="{{ route('categories.store') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDanhMucLabel">Thêm mới danh mục</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <BR>
-                <button class="btn btn-save" type="button">Lưu lại</button>
-                <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
-                <BR>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
-</div>
-<!--
-MODAL
--->
 
-
-
-<!--
-  MODAL DANH MỤC
--->
-<div class="modal fade" id="adddanhmuc" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group  col-md-12">
-                        <span class="thong-tin-thanh-toan">
-                            <h5>Thêm mới danh mục </h5>
-                        </span>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Nhập tên danh mục mới</label>
+                        <input class="form-control" name="name" type="text" required>
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="control-label">Nhập tên danh mục mới</label>
-                        <input class="form-control" type="text" required>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="control-label">Danh mục sản phẩm hiện đang có</label>
-                        <ul style="padding-left: 20px;">
-                            <li>Bàn ăn</li>
-                            <li>Bàn thông minh</li>
-                            <li>Tủ</li>
-                            <li>Ghế gỗ</li>
-                            <li>Ghế sắt</li>
-                            <li>Giường người lớn</li>
-                            <li>Giường trẻ em</li>
-                            <li>Bàn trang điểm</li>
-                            <li>Giá đỡ</li>
+
+                    <div class="form-group">
+                        <label>Danh mục hiện có</label>
+                        <ul>
+                            @foreach ($categories as $cat)
+                            <li>{{ $cat->name }}</li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
-                <BR>
-                <button class="btn btn-save" type="button">Lưu lại</button>
-                <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
-                <BR>
-            </div>
-            <div class="modal-footer">
-            </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Lưu lại</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+
 <!--
 MODAL
 -->

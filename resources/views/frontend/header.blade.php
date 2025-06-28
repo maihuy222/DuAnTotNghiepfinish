@@ -41,12 +41,30 @@
 
                 <ul class="d-flex justify-content-end list-unstyled m-0">
                     <li>
-                        <a href="#" class="rounded-circle bg-light p-2 mx-1">
+                  
+                        @auth
+                        <div class="user-dropdown">
+                            <button class="user-toggle" onclick="toggleDropdown()">
+                                👋 Chào, {{ Auth::user()->name }}
+                            </button>
+                            <div id="dropdownMenu" class="dropdown-menu">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="logout-btn">Đăng xuất</button>
+                                </form>
+                            </div>
+                        </div>
+                        @else
+                        <a href="{{ route('login') }}" class="rounded-circle bg-light p-2 mx-1" title="Đăng nhập">
                             <svg width="24" height="24" viewBox="0 0 24 24">
                                 <use xlink:href="#user"></use>
                             </svg>
                         </a>
+                        @endauth
+
+
                     </li>
+
                     <li>
                         <a href="#" class="rounded-circle bg-light p-2 mx-1">
                             <svg width="24" height="24" viewBox="0 0 24 24">

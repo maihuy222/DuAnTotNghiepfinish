@@ -1,52 +1,208 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends('frontend.layout')
+@section('content')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@endsection
+
+
+    <div class="container">
+        <div class="main">
+            <img src="{{ asset('frontend/assets/img/login.png') }}" alt="Food Image">
+
+            <div class="login-box">
+                <h2>Register</h2>
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name" value="{{ old('name') }}" required>
+                    <x-input-error :messages="$errors->get('name')" class="text-red-500 text-sm" />
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="abc@gmail.com" value="{{ old('email') }}" required>
+                    <x-input-error :messages="$errors->get('email')" class="text-red-500 text-sm" />
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <x-input-error :messages="$errors->get('password')" class="text-red-500 text-sm" />
+
+                    <label for="password_confirmation">Confirm Password</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                    <x-input-error :messages="$errors->get('password_confirmation')" class="text-red-500 text-sm" />
+
+                    <button class="login-btn" type="submit">Register</button>
+                </form>
+
+                <div class="social-login">
+                    <span>or continue with</span>
+                    <div class="social-icons">
+                        <div><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"></div>
+                        <div><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" alt="Facebook"></div>
+                        <div><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple"></div>
+                    </div>
+                </div>
+
+                <div class="register">
+                    Already have an account?
+                    <a href="{{ route('login') }}">Login here</a>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    body {
+        background-color: #fff;
+        /* ✅ Nền trắng */
+        color: #111;
+        /* ✅ Chữ màu tối để dễ đọc trên nền trắng */
+        height: 100vh;
+        overflow-x: hidden;
+    }
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+    .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        position: relative;
+    }
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    .header {
+        display: flex;
+        align-items: center;
+        padding: 20px 40px;
+        position: relative;
+    }
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+    .close {
+        position: absolute;
+        right: 40px;
+        font-size: 32px;
+        color: #ea580c;
+        /* ✅ Chữ X màu cam nổi bật */
+        cursor: pointer;
+    }
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+    .main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px;
+    }
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+    .main img {
+        max-width: 45%;
+        border-radius: 12px;
+    }
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+    .login-box {
+        background-color: #f3f4f6;
+        /* ✅ Box login nền xám sáng */
+        padding: 40px;
+        border-radius: 20px;
+        width: 500px;
+    }
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    .login-box h2 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #111;
+        /* ✅ Tiêu đề màu đen */
+    }
+
+    .login-box label {
+        display: block;
+        margin: 15px 0 5px;
+        font-size: 18px;
+        color: #111;
+        /* ✅ Label màu đen */
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        background-color: #fff;
+        color: #111;
+    }
+
+    .forgot {
+        text-align: right;
+        margin-bottom: 20px;
+        color: #555;
+        /* ✅ Màu chữ nhạt hơn */
+        font-size: 14px;
+    }
+
+    .login-btn {
+        width: 100%;
+        background-color: #ea580c;
+        padding: 14px 0;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+    }
+
+    .social-login {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .social-login span {
+        display: block;
+        margin-bottom: 15px;
+        color: #555;
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .social-icons div {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .social-icons img {
+        width: 60%;
+        height: auto;
+    }
+
+    .register {
+        margin-top: 20px;
+        text-align: center;
+        color: #555;
+    }
+
+    .register a {
+        color: #ea580c;
+        font-weight: bold;
+        text-decoration: underline;
+        margin-left: 5px;
+    }
+</style>
+
+@endsection

@@ -16,7 +16,7 @@
                     <div class="row element-button">
                         <div class="col-sm-2">
 
-                            <a class="btn btn-add btn-sm" href="form-add-san-pham.html" title="Thêm"><i class="fas fa-plus"></i>
+                            <a class="btn btn-add btn-sm" href="{{ route('products.create') }}" title="Thêm"><i class="fas fa-plus"></i>
                                 Tạo mới sản phẩm</a>
                         </div>
                         <div class="col-sm-2">
@@ -85,8 +85,10 @@
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
-                                    <button class="btn btn-primary btn-sm edit" type="button" title="Sửa" id="show-emp" data-toggle="modal"
-                                        data-target="#ModalUP"><i class="fas fa-edit"></i></button>
+                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa nâng cao">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
 
                                 </td>
                             </tr>

@@ -1,47 +1,218 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('frontend.layout')
+@section('content')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@endsection
+
+
+<body>
+    <div class="container">
+        <div class="main">
+            <img src="{{ asset('frontend/assets/img/login.png') }}" alt="Food Image">
+
+
+            <div class="login-box">
+                <h2>Login</h2>
+
+                {{-- Hiển thị thông báo lỗi chung --}}
+                @if (session('status'))
+                <div style="color: #facc15; text-align:center; margin-bottom: 10px;">
+                    {{ session('status') }}
+                </div>
+                @endif
+
+                {{-- FORM LOGIN --}}
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
+                    @error('email')
+                    <div style="color: red; font-size: 14px;">{{ $message }}</div>
+                    @enderror
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                    @error('password')
+                    <div style="color: red; font-size: 14px;">{{ $message }}</div>
+                    @enderror
+
+                    <div class="forgot">
+                        <a href="{{ route('password.request') }}" style="color: #facc15;">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="login-btn">Sign in</button>
+                </form>
+
+                <div class="social-login">
+                    <span>or continue with</span>
+                    <div class="social-icons">
+                        <div><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"></div>
+                        <div><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" alt="Facebook"></div>
+                        <div><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple"></div>
+                    </div>
+                </div>
+
+                <div class="register">
+                    Don’t have an account yet?
+                    <a href="{{ route('register') }}">Register here</a>
+                </div>
+            </div>
         </div>
+    </div>
+</body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    body {
+        background-color: #fff;
+        /* ✅ Nền trắng */
+        color: #111;
+        /* ✅ Chữ màu tối để dễ đọc trên nền trắng */
+        height: 100vh;
+        overflow-x: hidden;
+    }
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+    .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        position: relative;
+    }
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    .header {
+        display: flex;
+        align-items: center;
+        padding: 20px 40px;
+        position: relative;
+    }
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+    .close {
+        position: absolute;
+        right: 40px;
+        font-size: 32px;
+        color: #ea580c;
+        /* ✅ Chữ X màu cam nổi bật */
+        cursor: pointer;
+    }
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+    .main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px;
+    }
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    .main img {
+        max-width: 45%;
+        border-radius: 12px;
+    }
+
+    .login-box {
+        background-color: #f3f4f6;
+        /* ✅ Box login nền xám sáng */
+        padding: 40px;
+        border-radius: 20px;
+        width: 500px;
+    }
+
+    .login-box h2 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #111;
+        /* ✅ Tiêu đề màu đen */
+    }
+
+    .login-box label {
+        display: block;
+        margin: 15px 0 5px;
+        font-size: 18px;
+        color: #111;
+        /* ✅ Label màu đen */
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        background-color: #fff;
+        color: #111;
+    }
+
+    .forgot {
+        text-align: right;
+        margin-bottom: 20px;
+        color: #555;
+        /* ✅ Màu chữ nhạt hơn */
+        font-size: 14px;
+    }
+
+    .login-btn {
+        width: 100%;
+        background-color: #ea580c;
+        padding: 14px 0;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+    }
+
+    .social-login {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .social-login span {
+        display: block;
+        margin-bottom: 15px;
+        color: #555;
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .social-icons div {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .social-icons img {
+        width: 60%;
+        height: auto;
+    }
+
+    .register {
+        margin-top: 20px;
+        text-align: center;
+        color: #555;
+    }
+
+    .register a {
+        color: #ea580c;
+        font-weight: bold;
+        text-decoration: underline;
+        margin-left: 5px;
+    }
+</style>
+
+@endsection
