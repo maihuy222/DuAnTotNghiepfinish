@@ -14,6 +14,7 @@ class SanPhamController extends Controller
         $products = DB::table('products')
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->select('products.*', 'categories.name as category_name')
+            ->where('products.isDeleted', 0) // Chỉ lấy sản phẩm chưa bị xóa
             ->get();
 
         return view('admin.quanlysanpham', ['products' => $products]);
@@ -129,8 +130,42 @@ class SanPhamController extends Controller
         return redirect()->route('products.index')->with('success', 'Cập nhật sản phẩm thành công!');
     }
 
-    // 👉 3️⃣ Xóa sản phẩm
+    // 👉 3️⃣ Xóa sản phẩm (soft delete)
     function destroy($id)
+    {
+        $product = DB::table('products')->find($id);
+        if (!$product) {
+            return redirect()->route('products.index')->with('error', 'Sản phẩm không tồn tại.');
+        }
+
+        // Xóa mềm - chỉ đánh dấu isDeleted = 1
+        DB::table('products')->where('id', $id)->update([
+            'isDeleted' => 1,
+            'updated_at' => now()
+        ]);
+
+        return redirect()->route('products.index')->with('success', 'Xóa sản phẩm thành công!');
+    }
+
+    // 👉 4️⃣ Khôi phục sản phẩm đã xóa
+    function restore($id)
+    {
+        $product = DB::table('products')->find($id);
+        if (!$product) {
+            return redirect()->route('products.index')->with('error', 'Sản phẩm không tồn tại.');
+        }
+
+        // Khôi phục - đánh dấu isDeleted = 0
+        DB::table('products')->where('id', $id)->update([
+            'isDeleted' => 0,
+            'updated_at' => now()
+        ]);
+
+        return redirect()->route('products.index')->with('success', 'Khôi phục sản phẩm thành công!');
+    }
+
+    // 👉 5️⃣ Xóa vĩnh viễn sản phẩm (chỉ dùng khi thực sự cần)
+    function forceDelete($id)
     {
         $product = DB::table('products')->find($id);
         if (!$product) {
@@ -142,9 +177,10 @@ class SanPhamController extends Controller
             unlink(public_path($product->image));
         }
 
+        // Xóa vĩnh viễn khỏi database
         DB::table('products')->where('id', $id)->delete();
 
-        return redirect()->route('products.index')->with('success', 'Xóa sản phẩm thành công!');
+        return redirect()->route('products.index')->with('success', 'Xóa vĩnh viễn sản phẩm thành công!');
     }
 }
 

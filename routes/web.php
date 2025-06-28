@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\SanPhamController;
 use App\Http\Controllers\Admin\BinhLuanController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SliderController;
 
 Route::get('/', function () {
     return view('frontend.home');
@@ -70,6 +71,17 @@ Route::prefix('admin')->name('admin.')->group(
         Route::put('/binhluan/{id}/status', [BinhLuanController::class, 'updateStatus'])->name('binhluan.updateStatus');
         Route::post('/binhluan/{id}/reply', [BinhLuanController::class, 'reply'])->name('binhluan.reply');
         Route::delete('/binhluan/{id}', [BinhLuanController::class, 'destroy'])->name('binhluan.destroy');
+        
+        // Routes cho quản lý slider/quảng cáo
+        Route::get('/sliders', [SliderController::class, 'index'])->name('sliders.index');
+        Route::get('/sliders/create', [SliderController::class, 'create'])->name('sliders.create');
+        Route::post('/sliders', [SliderController::class, 'store'])->name('sliders.store');
+        Route::get('/sliders/{id}/edit', [SliderController::class, 'edit'])->name('sliders.edit');
+        Route::put('/sliders/{id}', [SliderController::class, 'update'])->name('sliders.update');
+        Route::delete('/sliders/{id}', [SliderController::class, 'destroy'])->name('sliders.destroy');
+        Route::put('/sliders/{id}/restore', [SliderController::class, 'restore'])->name('sliders.restore');
+        Route::delete('/sliders/{id}/force', [SliderController::class, 'forceDelete'])->name('sliders.forceDelete');
+        Route::put('/sliders/{id}/toggle-active', [SliderController::class, 'toggleActive'])->name('sliders.toggleActive');
     });
 Route::prefix('admin/products')->group(function () {
     Route::get('/', [SanPhamController::class, 'index'])->name('products.index'); // Danh sách
@@ -77,9 +89,9 @@ Route::prefix('admin/products')->group(function () {
     Route::post('/store', [SanPhamController::class, 'store'])->name('products.store'); // Lưu mới
     Route::get('/{id}/edit', [SanPhamController::class, 'edit'])->name('products.edit'); // Form sửa
     Route::put('/{id}', [SanPhamController::class, 'update'])->name('products.update'); // Cập nhật
-    Route::delete('/{id}', [SanPhamController::class, 'destroy'])->name('products.destroy');
-  
-
+    Route::delete('/{id}', [SanPhamController::class, 'destroy'])->name('products.destroy'); // Xóa mềm
+    Route::put('/{id}/restore', [SanPhamController::class, 'restore'])->name('products.restore'); // Khôi phục
+    Route::delete('/{id}/force', [SanPhamController::class, 'forceDelete'])->name('products.forceDelete'); // Xóa vĩnh viễn
 });
 Route::prefix('admin/categories')->name('categories.')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('index');

@@ -68,6 +68,7 @@ class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             PostSeeder::class,
             CommentSeeder::class,
+            SliderSeeder::class,
         ]);
     }
 }
