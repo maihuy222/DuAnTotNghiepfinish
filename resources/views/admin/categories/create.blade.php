@@ -24,5 +24,12 @@
         @endforelse
     </ul>
 </div>
+<div class="form-group">
+    <label>
+        <input type="checkbox" name="show_in_nav" value="1" {{ old('show_in_nav', $category->show_in_nav ?? false) ? 'checked' : '' }}>
+        Hiển thị trên thanh điều hướng
+    </label>
+</div>
+
 
 @endsection

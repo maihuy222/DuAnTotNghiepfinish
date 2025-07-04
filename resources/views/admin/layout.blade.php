@@ -15,6 +15,7 @@
 
     <!-- Boxicons CDN (Dùng 1 cái thôi) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    
 
 
 
@@ -111,6 +112,14 @@
                     <span class="app-menu__label">Quản lý danh mục</span>
                 </a>
             </li>
+            <li>
+                <a class="app-menu__item" href="{{ route('admin.sliders.index') }}">
+                    <i class="app-menu__icon bx bx-images"></i>
+                    <span class="app-menu__label">Quản lý quảng cáo</span>
+                </a>
+            </li>
+
+
 
             <li><a class="app-menu__item" href="table-data-money.html"><i class='app-menu__icon bx bx-dollar'></i><span
                         class="app-menu__label">Bảng kê lương</span></a></li>
@@ -125,8 +134,11 @@
     </aside>
 
 
+  
+        @yield('content')
+  
 
-    @yield('content')
+
     <script src="{{ asset('admin/assets/ckeditor/ckeditor.js') }}"></script>
     @yield('js')
 

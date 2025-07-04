@@ -21,21 +21,21 @@
                 </div>
                 <div class="tile-body">
                     @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     @endif
 
                     @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ session('error') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     @endif
 
                     <div class="table-responsive">
@@ -57,22 +57,22 @@
                                     <td>{{ $slider->id }}</td>
                                     <td>
                                         @if($slider->image)
-                                            <img src="{{ asset('storage/' . $slider->image) }}" 
-                                                 alt="{{ $slider->title }}" 
-                                                 class="img-thumbnail" 
-                                                 style="max-width: 80px; max-height: 60px;">
+                                        <img src="{{ asset('storage/' . $slider->image) }}"
+                                            alt="{{ $slider->title }}"
+                                            class="img-thumbnail"
+                                            style="max-width: 80px; max-height: 60px;">
                                         @else
-                                            <span class="text-muted">Không có hình</span>
+                                        <span class="text-muted">Không có hình</span>
                                         @endif
                                     </td>
                                     <td>{{ $slider->title }}</td>
                                     <td>
                                         @if($slider->link)
-                                            <a href="{{ $slider->link }}" target="_blank" class="text-primary">
-                                                {{ Str::limit($slider->link, 50) }}
-                                            </a>
+                                        <a href="{{ $slider->link }}" target="_blank" class="text-primary">
+                                            {{ Str::limit($slider->link, 50) }}
+                                        </a>
                                         @else
-                                            <span class="text-muted">Không có link</span>
+                                        <span class="text-muted">Không có link</span>
                                         @endif
                                     </td>
                                     <td>
@@ -81,27 +81,34 @@
                                         </span>
                                     </td>
                                     <td>{{ $slider->created_at->format('d/m/Y H:i') }}</td>
+                                    @php
+                                    $eyeIcon = $slider->is_active ? 'fa-eye' : 'fa-eye-slash';
+                                    @endphp
+
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a href="{{ route('admin.sliders.edit', $slider->id) }}" 
-                                               class="btn btn-sm btn-info" 
-                                               title="Sửa">
+                                            <a href="{{ route('admin.sliders.edit', $slider->id) }}"
+                                                class="btn btn-sm btn-info"
+                                                title="Sửa">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <button type="button" 
-                                                    class="btn btn-sm btn-danger" 
-                                                    onclick="deleteSlider({{ $slider->id }})"
-                                                    title="Xóa">
+
+                                            <button type="button"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="deleteSlider({{ (int) $slider->id }})"
+                                                title="Xóa">
                                                 <i class="fas fa-trash"></i>
                                             </button>
-                                            <button type="button" 
-                                                    class="btn btn-sm btn-warning" 
-                                                    onclick="toggleActiveSlider({{ $slider->id }})"
-                                                    title="Bật/Tắt hiển thị">
-                                                <i class="fas fa-eye{{ $slider->is_active ? '' : '-slash' }}"></i>
+
+                                            <button type="button"
+                                                class="btn btn-sm btn-warning"
+                                                onclick="toggleActiveSlider({{ $slider->id }})"
+                                                title="Bật/Tắt hiển thị">
+                                                <i class="fas {{ $eyeIcon }}"></i>
                                             </button>
                                         </div>
                                     </td>
+
                                 </tr>
                                 @empty
                                 <tr>
@@ -126,113 +133,113 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
 <script>
-function deleteSlider(id) {
-    swal({
-        title: "Cảnh báo",
-        text: "Bạn có chắc chắn muốn xóa quảng cáo này?",
-        icon: "warning",
-        buttons: ["Hủy bỏ", "Đồng ý"],
-        dangerMode: true,
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                url: '/admin/sliders/' + id,
-                type: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    if(response.success) {
-                        swal("Thành công!", response.message, "success").then(() => {
-                            location.reload();
-                        });
+    function deleteSlider(id) {
+        swal({
+            title: "Cảnh báo",
+            text: "Bạn có chắc chắn muốn xóa quảng cáo này?",
+            icon: "warning",
+            buttons: ["Hủy bỏ", "Đồng ý"],
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: '/admin/sliders/' + id,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            swal("Thành công!", response.message, "success").then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            swal("Lỗi!", response.message, "error");
+                        }
+                    },
+                    error: function(xhr) {
+                        var message = "Có lỗi xảy ra khi xóa quảng cáo";
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        }
+                        swal("Lỗi!", message, "error");
+                    }
+                });
+            }
+        });
+    }
+
+    function toggleActiveSlider(id) {
+        $.ajax({
+            url: '/admin/sliders/' + id + '/toggle-active',
+            type: 'PUT',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response.success) {
+                    let badge = $('#status-badge-' + id);
+                    if (response.is_active) {
+                        badge.removeClass('bg-secondary').addClass('bg-success').text('Đang hiển thị');
                     } else {
-                        swal("Lỗi!", response.message, "error");
+                        badge.removeClass('bg-success').addClass('bg-secondary').text('Đang ẩn');
                     }
-                },
-                error: function(xhr) {
-                    var message = "Có lỗi xảy ra khi xóa quảng cáo";
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        message = xhr.responseJSON.message;
-                    }
-                    swal("Lỗi!", message, "error");
-                }
-            });
-        }
-    });
-}
-
-function toggleActiveSlider(id) {
-    $.ajax({
-        url: '/admin/sliders/' + id + '/toggle-active',
-        type: 'PUT',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            if(response.success) {
-                let badge = $('#status-badge-' + id);
-                if(response.is_active) {
-                    badge.removeClass('bg-secondary').addClass('bg-success').text('Đang hiển thị');
+                    swal('Thành công!', response.message, 'success');
                 } else {
-                    badge.removeClass('bg-success').addClass('bg-secondary').text('Đang ẩn');
+                    swal('Lỗi!', response.message, 'error');
                 }
-                swal('Thành công!', response.message, 'success');
-            } else {
-                swal('Lỗi!', response.message, 'error');
+            },
+            error: function(xhr) {
+                var message = 'Có lỗi xảy ra khi thay đổi trạng thái slider';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                swal('Lỗi!', message, 'error');
             }
-        },
-        error: function(xhr) {
-            var message = 'Có lỗi xảy ra khi thay đổi trạng thái slider';
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-                message = xhr.responseJSON.message;
+        });
+    }
+
+    // Thời gian
+    function time() {
+        var today = new Date();
+        var weekday = new Array(7);
+        weekday[0] = "Chủ Nhật";
+        weekday[1] = "Thứ Hai";
+        weekday[2] = "Thứ Ba";
+        weekday[3] = "Thứ Tư";
+        weekday[4] = "Thứ Năm";
+        weekday[5] = "Thứ Sáu";
+        weekday[6] = "Thứ Bảy";
+        var day = weekday[today.getDay()];
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        nowTime = h + " giờ " + m + " phút " + s + " giây";
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        today = day + ', ' + dd + '/' + mm + '/' + yyyy;
+        tmp = '<span class="date"> ' + today + ' - ' + nowTime + '</span>';
+        document.getElementById("clock").innerHTML = tmp;
+        clocktime = setTimeout("time()", "1000", "Javascript");
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i;
             }
-            swal('Lỗi!', message, 'error');
+            return i;
         }
-    });
-}
-
-// Thời gian
-function time() {
-    var today = new Date();
-    var weekday = new Array(7);
-    weekday[0] = "Chủ Nhật";
-    weekday[1] = "Thứ Hai";
-    weekday[2] = "Thứ Ba";
-    weekday[3] = "Thứ Tư";
-    weekday[4] = "Thứ Năm";
-    weekday[5] = "Thứ Sáu";
-    weekday[6] = "Thứ Bảy";
-    var day = weekday[today.getDay()];
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1;
-    var yyyy = today.getFullYear();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var s = today.getSeconds();
-    m = checkTime(m);
-    s = checkTime(s);
-    nowTime = h + " giờ " + m + " phút " + s + " giây";
-    if (dd < 10) {
-        dd = '0' + dd
     }
-    if (mm < 10) {
-        mm = '0' + mm
-    }
-    today = day + ', ' + dd + '/' + mm + '/' + yyyy;
-    tmp = '<span class="date"> ' + today + ' - ' + nowTime + '</span>';
-    document.getElementById("clock").innerHTML = tmp;
-    clocktime = setTimeout("time()", "1000", "Javascript");
 
-    function checkTime(i) {
-        if (i < 10) {
-            i = "0" + i;
-        }
-        return i;
-    }
-}
-
-time();
+    time();
 </script>
 
-@endsection 
+@endsection

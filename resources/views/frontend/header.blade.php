@@ -1,7 +1,6 @@
 <header>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row py-3 border-bottom">
-
             <div class="col-sm-4 col-lg-3 text-center text-sm-start">
                 <div class="main-logo">
                     <a href="index.html">
@@ -9,7 +8,6 @@
                     </a>
                 </div>
             </div>
-
             <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
                 <div class="search-bar row bg-light p-2 my-2 rounded-4">
                     <div class="col-md-4 d-none d-md-block">
@@ -41,7 +39,7 @@
 
                 <ul class="d-flex justify-content-end list-unstyled m-0">
                     <li>
-                  
+
                         @auth
                         <div class="user-dropdown">
                             <button class="user-toggle" onclick="toggleDropdown()">
@@ -98,7 +96,7 @@
 
         </div>
     </div>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row py-3">
             <div class="d-flex  justify-content-center justify-content-sm-between align-items-center">
                 <nav class="main-menu d-flex navbar navbar-expand-lg">
@@ -113,58 +111,32 @@
                         <div class="offcanvas-header justify-content-center">
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
-
                         <div class="offcanvas-body">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                {{-- Danh mục dạng link --}}
+                                <ul class="navbar-nav menu-list list-unstyled d-flex gap-md-3 mb-0">
+                                    @foreach ($navCategories as $category)
+                                    <li class="nav-item">
+                                        <a href="{{ url('category/' . $category->slug) }}" class="nav-link">
+                                            {{ $category->name }}
+                                        </a>
+                                    </li>
+                                    @endforeach
+                                </ul>
 
-                            <select class="filter-categories border-0 mb-0 me-5">
-                                <option>Shop by Departments</option>
-                                <option>Groceries</option>
-                                <option>Drinks</option>
-                                <option>Chocolates</option>
-                            </select>
-
-                            <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                                <li class="nav-item active">
-                                    <a href="#women" class="nav-link">Women</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a href="#men" class="nav-link">Men</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#kids" class="nav-link">Kids</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#accessories" class="nav-link">Accessories</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
-                                    <ul class="dropdown-menu" aria-labelledby="pages">
-                                        <li><a href="index.html" class="dropdown-item">About Us </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Shop </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Single Product </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Cart </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Checkout </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Blog </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Single Post </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Styles </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Contact </a></li>
-                                        <li><a href="index.html" class="dropdown-item">Thank You </a></li>
-                                        <li><a href="index.html" class="dropdown-item">My Account </a></li>
-                                        <li><a href="index.html" class="dropdown-item">404 Error </a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#brand" class="nav-link">Brand</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#sale" class="nav-link">Sale</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#blog" class="nav-link">Blog</a>
-                                </li>
-                            </ul>
-
+                                {{-- Select "Xem thêm" --}}
+                                <select class="form-select border-0 bg-transparent w-auto"
+                                    onchange="if (this.value) window.location.href = '/category/' + this.value;">
+                                    <option selected disabled>Xem thêm</option>
+                                    @foreach ($otherCategories as $category)
+                                    <option value="{{ $category->slug }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
+
+
+
 
                     </div>
             </div>

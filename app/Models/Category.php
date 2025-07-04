@@ -9,7 +9,7 @@ class Category extends Model
 {
     protected $table = 'categories';
 
-    protected $fillable = ['name', 'slug', 'isDeleted'];
+    protected $fillable = ['name', 'slug', 'isDeleted', 'show_in_nav'];
 
     // Tạo slug tự động khi set name
     public static function boot()

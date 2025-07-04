@@ -34,7 +34,8 @@ class SanPhamController extends Controller
             'category_id' => 'nullable|exists:categories,id',
             'status' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120', // 5MB
-            'description' => 'nullable|string'
+            'description' => 'nullable|string' 
+            
         ]);
 
         // Xử lý upload ảnh
