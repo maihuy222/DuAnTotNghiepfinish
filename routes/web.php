@@ -120,8 +120,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
     Route::delete('/cart/remove/{itemId}', [CartController::class, 'remove'])->name('cart.remove');
+
     Route::post('/checkout', [UserOrderController::class, 'checkout'])->name('checkout');
     Route::get('/checkout', [UserOrderController::class, 'showCheckoutForm'])->name('checkout.form');
+    
     Route::get('/vnpay/checkout', [PaymentController::class, 'vnpayRedirect'])->name('vnpay.checkout');
     Route::get('/vnpay/return', [PaymentController::class, 'vnpayCallback'])->name('vnpay.return');
 });;

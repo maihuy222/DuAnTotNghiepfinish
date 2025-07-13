@@ -8,9 +8,6 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Services\VNPayService;
 
-
-
-
 class PaymentController extends Controller
 {
     public function vnpayRedirect(Request $request)
@@ -18,32 +15,46 @@ class PaymentController extends Controller
         $orderId = $request->get('order_id');
         $order = Order::findOrFail($orderId);
 
-        // Tạo link VNPAY ở đây (giả sử trả về URL)
         $vnpUrl = VNPayService::generatePaymentUrl($order);
-
-        return redirect($vnpUrl);
+        return redirect($vnpUrl); // ✅ Đây mới là cách Laravel redirect đúng
     }
+
 
     public function vnpayCallback(Request $request)
     {
-        $orderId = $request->get('vnp_TxnRef');
-        $status = $request->get('vnp_ResponseCode') == '00' ? 'completed' : 'failed';
+        $vnp_SecureHash = $request->input('vnp_SecureHash');
 
-        $order = Order::find($orderId);
-        if ($order) {
-            // Cập nhật trạng thái thanh toán
-            Payment::where('order_id', $orderId)->update([
-                'status' => $status,
-            ]);
+        // Lấy toàn bộ input trừ SecureHash & SecureHashType
+        $inputData = $request->except(['vnp_SecureHash', 'vnp_SecureHashType']);
+        ksort($inputData);
 
-            $order->status = $status === 'completed' ? 'paid' : 'failed';
-            $order->save();
+        $hashData = urldecode(http_build_query($inputData));
+        $computedHash = hash_hmac('sha512', $hashData, config('vnpay.hash_secret'));
 
-            return redirect()->route('orders.success')->with('success', 'Thanh toán VNPAY ' . $status);
+        if ($computedHash === $vnp_SecureHash) {
+            $order = Order::find($request->input('vnp_TxnRef'));
+
+            if (!$order) {
+                abort(404, 'Không tìm thấy đơn hàng');
+            }
+
+            if ($request->input('vnp_ResponseCode') === '00') {
+                $order->update(['status' => 'paid']);
+
+                Payment::create([
+                    'order_id' => $order->id,
+                    'amount' => $order->total_amount,
+                    'method' => 'vnpay',
+                    'status' => 'completed'
+                ]);
+
+                return view('frontend.payment_success', compact('order'));
+            } else {
+                $order->update(['status' => 'failed']);
+                return view('frontend.payment_fail', compact('order'));
+            }
+        } else {
+            abort(403, 'Sai chữ ký thanh toán (SecureHash không hợp lệ)');
         }
-
-        return redirect()->route('home')->with('error', 'Không tìm thấy đơn hàng');
     }
 }
-
-

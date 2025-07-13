@@ -91,18 +91,19 @@ class OrderController extends Controller
             dd($e->getMessage());
         }
     }
+public function index()
+{
+    $userId = Auth::id();
 
-    public function index()
-    {
-        $userId = Auth::id();
+    $orders = Order::where('user_id', $userId)
+        ->withCount('details') // Đếm số lượng chi tiết đơn hàng
+        ->with(['details.product', 'details.size', 'payment']) // Nạp quan hệ
+        ->orderByDesc('created_at')
+        ->paginate(12); // Phân trang
 
-        $orders = Order::where('user_id', $userId)
-            ->with('details.product', 'details.size', 'payment')
-            ->orderByDesc('created_at')
-            ->get();
+    return view('frontend.orders.index', compact('orders'));
+}
 
-        return view('frontend.orders.index', compact('orders'));
-    }
 
     public function show($id)
     {
