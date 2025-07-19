@@ -1360,44 +1360,39 @@
         button.innerHTML = '<iconify-icon icon="eos-icons:loading" width="16"></iconify-icon> Adding...';
         button.style.pointerEvents = 'none';
 
-        // Simulate API call
-        fetch('/cart/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: quantity
-                })
+        // Gọi đúng route có id
+        fetch(`/cart/add/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                quantity: quantity
+                // Nếu cần thêm price, size_id thì truyền thêm ở đây
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Success feedback
-                    button.innerHTML = '<iconify-icon icon="material-symbols:check" width="16"></iconify-icon> Added!';
-                    button.style.color = '#28a745';
-
-                    // Reset after 2 seconds
-                    setTimeout(() => {
-                        button.innerHTML = originalText;
-                        button.style.color = '';
-                        button.style.pointerEvents = '';
-                    }, 2000);
-
-                    // Show success toast/notification
-                    showNotification('Product added to cart successfully!', 'success');
-                } else {
-                    throw new Error(data.message || 'Failed to add product to cart');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                button.innerHTML = originalText;
-                button.style.pointerEvents = '';
-                showNotification('Error adding product to cart', 'error');
-            });
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button.innerHTML = '<iconify-icon icon="material-symbols:check" width="16"></iconify-icon> Added!';
+                button.style.color = '#28a745';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.color = '';
+                    button.style.pointerEvents = '';
+                }, 2000);
+                showNotification('Product added to cart successfully!', 'success');
+            } else {
+                throw new Error(data.message || 'Failed to add product to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            button.innerHTML = originalText;
+            button.style.pointerEvents = '';
+            showNotification('Error adding product to cart', 'error');
+        });
     }
 
     // Quantity Controls
