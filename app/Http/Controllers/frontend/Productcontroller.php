@@ -21,6 +21,15 @@ class Productcontroller extends Controller
             ->take(4)
             ->get();
 
-        return view('frontend.product_detail', compact('product', 'relatedProducts'));
+        return view('frontend.products.product_detail', compact('product', 'relatedProducts'));
+    }
+    public function index()
+    {
+        $products = DB::table('products')
+            ->where('isDeleted', 0)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('frontend.products.index', compact('products'));
     }
 }

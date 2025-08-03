@@ -35,10 +35,11 @@ class Post extends Model
     }
 
     // Quan hệ với Category (nếu có model Category)
-    public function category()
+    public function postcategory()
     {
         return $this->belongsTo(PostCategory::class, 'category_id');
     }
+
 
     // Quan hệ với Employee (nếu có model Employee)
     public function employee()
@@ -56,5 +57,16 @@ class Post extends Model
     public function scopeByCategory($query, $categoryId)
     {
         return $query->where('category_id', $categoryId);
+    }
+    // Quan hệ với danh mục bài viết (PostCategory)
+    public function category()
+    {
+        return $this->belongsTo(PostCategory::class, 'category_id');
+    }
+
+    // Quan hệ với nhân viên/tác giả (Employee)
+    public function author()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 } 

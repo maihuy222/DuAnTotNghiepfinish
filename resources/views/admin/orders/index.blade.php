@@ -18,8 +18,10 @@
                     <div class="row element-button">
                         <div class="col-sm-2">
 
-                            <a class="btn btn-add btn-sm" href="form-add-nhan-vien.html" title="Thêm"><i class="fas fa-plus"></i>
-                                Tạo mới nhân viên</a>
+                            <a class="btn btn-add btn-sm" href="{{ route('admin.orders.create') }}" title="Tạo đơn hàng">
+                                <i class="fas fa-plus"></i> Tạo đơn hàng mới
+                            </a>
+
                         </div>
                         <div class="col-sm-2">
                             <a class="btn btn-delete btn-sm nhap-tu-file" type="button" title="Nhập" onclick="myFunction(this)"><i
@@ -73,10 +75,10 @@
                                 <td>{{ $order->payment->method ?? '---' }}</td>
                                 <td>
                                     <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-primary">Chi tiết</a>
-                                </td>                                                           
+                                </td>
                             </tr>
                             @endforeach
-                          
+
 
 
                         </tbody>

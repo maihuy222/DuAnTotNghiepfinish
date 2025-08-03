@@ -76,12 +76,6 @@
         position: relative;
     }
 
-    .header {
-        display: flex;
-        align-items: center;
-        padding: 20px 40px;
-        position: relative;
-    }
 
     .close {
         position: absolute;

@@ -35,7 +35,13 @@ class PaymentController extends Controller
         );
         ksort($inputData);
 
-        $hashData = urldecode(http_build_query($inputData));
+        $hashData = '';
+        foreach ($inputData as $key => $value) {
+            $hashData .= urlencode($key) . '=' . urlencode($value) . '&';
+        }
+        $hashData = rtrim($hashData, '&');
+
+
         $computedHash = hash_hmac('sha512', $hashData, config('vnpay.hash_secret'));
 
         // Thêm log để debug

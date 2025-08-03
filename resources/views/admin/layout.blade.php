@@ -15,7 +15,7 @@
 
     <!-- Boxicons CDN (Dùng 1 cái thôi) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-    
+
 
 
 
@@ -91,7 +91,7 @@
             </li>
 
             <li>
-                <a class="app-menu__item" href="{{ route('products.index') }}">
+                <a class="app-menu__item" href="{{ route('admin.products.index') }}">
                     <i class='app-menu__icon bx bx-purchase-tag-alt'></i>
                     <span class="app-menu__label">Quản lý sản phẩm</span>
                 </a>
@@ -104,7 +104,8 @@
                 </a>
             </li>
 
-            <li><a class="app-menu__item" href="table-data-oder.html"><i class='app-menu__icon bx bx-task'></i><span
+            <li><a class="app-menu__item" href="{{ route('admin.orders.index') }}">
+                    <i class='app-menu__icon bx bx-task'></i><span
                         class="app-menu__label">Quản lý đơn hàng</span></a></li>
             <li>
                 <a class="app-menu__item" href="{{ route('categories.index') }}">
@@ -118,12 +119,20 @@
                     <span class="app-menu__label">Quản lý quảng cáo</span>
                 </a>
             </li>
+            <li>
+                <a class="app-menu__item" href="{{ route('admin.posts.index') }}">
+                    <i class="app-menu__icon bx bx-images"></i>
+                    <span class="app-menu__label">Quản lý bài viết</span>
+                </a>
+
+            </li>
+
 
 
 
             <li><a class="app-menu__item" href="table-data-money.html"><i class='app-menu__icon bx bx-dollar'></i><span
                         class="app-menu__label">Bảng kê lương</span></a></li>
-            <li><a class="app-menu__item" href="quan-ly-bao-cao.html"><i
+            <li><a class="app-menu__item" href="{{ route('admin.baocao') }}"><i
                         class='app-menu__icon bx bx-pie-chart-alt-2'></i><span class="app-menu__label">Báo cáo doanh thu</span></a>
             </li>
             <!-- <li><a class="app-menu__item" href="page-calendar.html"><i class='app-menu__icon bx bx-calendar-check'></i><span
@@ -134,9 +143,9 @@
     </aside>
 
 
-  
-        @yield('content')
-  
+
+    @yield('content')
+
 
 
     <script src="{{ asset('admin/assets/ckeditor/ckeditor.js') }}"></script>

@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="col-lg-2 col-md-3 col-sm-4 text-center text-sm-start">
                     <div class="main-logo">
-                        <a href="{{ url('index.html') }}">
+                        <a href="{{ route('home') }}">
                             <img src="{{ asset('assets/images/takex_logo_clean.png') }}" alt="logo" class="img-fluid">
                         </a>
 
@@ -14,29 +14,25 @@
                 </div>
 
                 <!-- Search Bar -->
-                <div class="col-lg-6 col-md-5 d-none d-md-block">
-                    <div class="search-container">
-                        <div class="search-bar d-flex align-items-center rounded-pill bg-white shadow-sm">
-                            <div class="category-select px-3">
-                                <select class="form-select border-0 bg-transparent">
-                                    <option>Tất cả danh mục</option>
-                                    <option>Thực phẩm</option>
-                                    <option>Đồ uống</option>
-                                    <option>Chocolate</option>
-                                </select>
-                            </div>
-                            <div class="search-input flex-grow-1">
-                                <form id="search-form" action="index.html" method="post">
-                                    <input type="text" class="form-control border-0 bg-transparent"
-                                        placeholder="Tìm kiếm hơn 20,000 sản phẩm..." />
-                                </form>
-                            </div>
-                            <button class="search-btn btn btn-primary rounded-circle me-2">
+                <div class="col-lg-6 col-md-5 d-none d-md-block position-relative">
+                    <form action="{{ route('search') }}" method="get" autocomplete="off">
+                        <div class="input-group rounded-pill overflow-hidden bg-light">
+                            <input type="text" name="q" id="searchInput"
+                                class="form-control border-0 px-4 py-2"
+                                placeholder="Bạn đang muốn tìm sản phẩm gì ?"
+                                aria-label="Bạn đang muốn tìm sản phẩm gì ?">
+                            <button class="btn btn-dark px-4" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
-                    </div>
+
+                        <!-- Gợi ý -->
+                        <ul id="autocompleteList" class="list-group position-absolute w-100 z-3 mt-1 bg-white rounded"></ul>
+                    </form>
                 </div>
+
+
+
 
                 <!-- User Actions -->
                 <div class="col-lg-4 col-md-4 col-sm-8 d-flex justify-content-end align-items-center">
@@ -44,8 +40,9 @@
                     <!-- Action Buttons -->
                     <div class="user-actions d-flex gap-2">
                         <!-- User Account -->
-                        @auth
                         <div class="user-dropdown">
+                            @auth
+
                             <button class="user-toggle btn btn-outline-light d-flex align-items-center gap-2"
                                 onclick="toggleDropdown()">
                                 <i class="fas fa-user"></i>
@@ -59,14 +56,20 @@
                                     </button>
                                 </form>
                             </div>
-                        </div>
-                        @else
-                        <a href="{{ route('login') }}" class="action-btn btn btn-outline-light rounded-circle"
-                            title="Đăng nhập">
-                            <i class="fas fa-user"></i>
-                        </a>
-                        @endauth
 
+                            @else
+                            <a href="{{ route('login') }}"
+                                class="btn btn-outline-light d-flex align-items-center gap-2 px-3 py-2 rounded-pill transition"
+                                style="background: while; border: 1px solid black; color: black;transition: all 0.3s ease;"
+                                title="Đăng nhập">
+                                <i class="fas fa-user"></i>
+                                <span>Đăng nhập</span>
+                            </a>
+
+
+
+                            @endauth
+                        </div>
                         <!-- Wishlist -->
                         <a href="#" class="action-btn btn btn-outline-light rounded-circle" title="Yêu thích">
                             <i class="fas fa-heart"></i>
@@ -89,16 +92,14 @@
 
                     <!-- Desktop Cart -->
                     <div class="cart-info d-none d-lg-block ms-3">
-                        <button class="cart-toggle btn btn-outline-light d-flex align-items-center gap-2"
-                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
-                            aria-controls="offcanvasCart">
+                        <a href="{{ route('cart.index') }}" class="btn btn-outline-light d-flex align-items-center gap-2">
                             <i class="fas fa-shopping-cart"></i>
                             <div class="cart-details text-start">
                                 <div class="cart-label small text-muted">Giỏ hàng</div>
-                                <div class="cart-total fw-bold">$1,290.00</div>
                             </div>
-                        </button>
+                        </a>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -125,6 +126,9 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <!-- Main Categories -->
                         <ul class="navbar-nav menu-list d-flex gap-md-3 mb-0">
+                            <li class="nav-item">
+                                <a href="{{ route('home') }}" class="nav-link text-white px-3 py-2 rounded-pill">Trang chủ</a>
+                            </li>
                             @foreach ($navCategories as $category)
                             <li class="nav-item">
                                 <a href="{{ url('category/' . $category->slug) }}"
@@ -133,6 +137,28 @@
                                 </a>
                             </li>
                             @endforeach
+                            <li class="nav-item">
+                                <a href="{{ url('/blog') }}" class="nav-link text-white px-3 py-2 rounded-pill">Blog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('/about') }}" class="nav-link text-white px-3 py-2 rounded-pill">Về chúng tôi</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('/contact') }}" class="nav-link text-white px-3 py-2 rounded-pill">Liên hệ</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('products.index') }}" class="nav-link text-white px-3 py-2 rounded-pill">Tất cả</a>
+                            </li>
+                            @auth
+                            <li class="nav-item">
+                                <a href="{{ route('orders.index') }}" class="nav-link text-white px-3 py-2 rounded-pill">
+                                    Lịch sử mua hàng
+                                </a>
+                            </li>
+                            @endauth
+
+
+
                         </ul>
 
                         <!-- More Categories Dropdown -->

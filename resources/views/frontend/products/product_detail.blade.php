@@ -170,24 +170,10 @@
 </div>
 
 <style>
-    :root {
-        --primary-color: #667eea;
-        --secondary-color: #764ba2;
-        --accent-color: #ff6b6b;
-        --success-color: #51cf66;
-        --text-primary: #2c3e50;
-        --text-secondary: #7f8c8d;
-        --bg-light: #f8f9fa;
-        --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
-        --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.15);
-        --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.2);
-        --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 20px;
-    }
+    
 
     .product-hero {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #000000ff 0%, #764ba2 100%);
         min-height: 100vh;
         padding: 2rem 0;
         position: relative;
@@ -205,16 +191,7 @@
         pointer-events: none;
     }
 
-    .container-fluid {
-        max-width: 1400px;
-        margin: 0 auto;
-        background: white;
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-lg);
-        overflow: hidden;
-        position: relative;
-        z-index: 1;
-    }
+    
 
     .product-gallery {
         padding: 3rem;

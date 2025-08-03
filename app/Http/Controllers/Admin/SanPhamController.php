@@ -128,7 +128,7 @@ class SanPhamController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Cập nhật sản phẩm thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Cập nhật sản phẩm thành công!');
     }
 
     // 👉 3️⃣ Xóa sản phẩm (soft delete)
@@ -136,7 +136,7 @@ class SanPhamController extends Controller
     {
         $product = DB::table('products')->find($id);
         if (!$product) {
-            return redirect()->route('products.index')->with('error', 'Sản phẩm không tồn tại.');
+            return redirect()->route('admin.products.index')->with('error', 'Sản phẩm không tồn tại.');
         }
 
         // Xóa mềm - chỉ đánh dấu isDeleted = 1
@@ -145,7 +145,7 @@ class SanPhamController extends Controller
             'updated_at' => now()
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Xóa sản phẩm thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Xóa sản phẩm thành công!');
     }
 
     // 👉 4️⃣ Khôi phục sản phẩm đã xóa
@@ -162,7 +162,7 @@ class SanPhamController extends Controller
             'updated_at' => now()
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Khôi phục sản phẩm thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Khôi phục sản phẩm thành công!');
     }
 
     // 👉 5️⃣ Xóa vĩnh viễn sản phẩm (chỉ dùng khi thực sự cần)

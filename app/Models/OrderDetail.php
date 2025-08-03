@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\Model;
     {
         return $this->belongsTo(Order::class);
     }
+    // App\Models\OrderDetail.php
+
+  
 }
 
 
