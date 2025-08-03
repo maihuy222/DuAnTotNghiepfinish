@@ -10,7 +10,7 @@
                     <div class="main-image-wrapper">
                         <img id="mainImage" src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="main-product-image">
                     </div>
-
+                    
                     @if ($product->images && count($product->images))
                     <div class="thumbnail-images">
                         <div class="thumbnail-item active" data-image="{{ asset($product->image) }}">
@@ -30,14 +30,14 @@
             <div class="col-md-6">
                 <div class="product-info-section">
                     <h1 class="product-title">{{ $product->name }}</h1>
-
+                    
                     <div class="product-description">
                         <p>{{ $product->description ?? 'Mô tả sản phẩm sẽ được hiển thị ở đây.' }}</p>
                     </div>
 
                     <form action="{{ route('cart.add', $product->id) }}" method="POST" class="order-form">
                         @csrf
-
+                        
                         <!-- Chọn kích cỡ -->
                         <div class="form-group">
                             <label class="form-label">Chọn kích cỡ:</label>
@@ -65,8 +65,6 @@
                             </div>
                         </div>
 
-
-
                         <!-- Số lượng -->
                         <div class="form-group">
                             <label class="form-label">Số lượng:</label>
@@ -89,15 +87,15 @@
                         <!-- Nút đặt món -->
                         <button type="submit" class="order-btn">Đặt món ngay</button>
                     </form>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Phần đánh giá và góp ý -->
         <div class="reviews-section">
             <h2 class="reviews-title">Đánh giá & Góp ý</h2>
             
-                        <!-- Hiển thị đánh giá hiện có -->
+            <!-- Hiển thị đánh giá hiện có -->
             <div class="existing-reviews" id="commentsList">
                 @if($comments->count() > 0)
                     @foreach($comments as $comment)
@@ -144,33 +142,12 @@
 </div>
 
 <style>
-<<<<<<< Updated upstream:resources/views/frontend/products/product_detail.blade.php
-    
-
-    .product-hero {
-        background: linear-gradient(135deg, #000000ff 0%, #764ba2 100%);
-=======
     .product-detail-container {
         background: #f8f9fa;
->>>>>>> Stashed changes:resources/views/frontend/product_detail.blade.php
         min-height: 100vh;
         padding: 2rem 0;
     }
 
-<<<<<<< Updated upstream:resources/views/frontend/products/product_detail.blade.php
-    .product-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-        pointer-events: none;
-    }
-
-    
-=======
     .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -183,7 +160,6 @@
         padding: 2rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
->>>>>>> Stashed changes:resources/views/frontend/product_detail.blade.php
 
     .main-image-wrapper {
         margin-bottom: 1rem;
@@ -292,16 +268,6 @@
         font-weight: 600;
     }
 
-    .size-option input[type="radio"]:checked + .size-text {
-        color: #667eea;
-        font-weight: 600;
-    }
-
-    .size-option input[type="radio"]:checked ~ .size-price {
-        color: #667eea;
-        font-weight: 600;
-    }
-
     .size-option:has(input[type="radio"]:checked) {
         border-color: #667eea;
         background: linear-gradient(135deg, #667eea, #764ba2);
@@ -320,19 +286,6 @@
     .size-price {
         font-size: 0.9rem;
         opacity: 0.8;
-    }
-
-    .form-select {
-        padding: 0.75rem;
-        border: 2px solid #e9ecef;
-        border-radius: 8px;
-        font-size: 1rem;
-        outline: none;
-        transition: border-color 0.3s ease;
-    }
-
-    .form-select:focus {
-        border-color: #667eea;
     }
 
     .quantity-wrapper {
