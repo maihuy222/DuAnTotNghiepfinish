@@ -38,6 +38,12 @@ class Comment extends Model
         return $this->belongsTo(Post::class, 'post_id');
     }
 
+    // Quan hệ với Product (sử dụng post_id nhưng logic khác)
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'post_id');
+    }
+
     // Scope để lọc comment chưa bị xóa
     public function scopeNotDeleted($query)
     {
@@ -48,5 +54,11 @@ class Comment extends Model
     public function scopeByStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    // Scope để lọc comment cho products
+    public function scopeForProducts($query)
+    {
+        return $query->whereIn('post_id', Product::pluck('id'));
     }
 } 

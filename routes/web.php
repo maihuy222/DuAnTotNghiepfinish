@@ -128,7 +128,10 @@ Route::prefix('admin/categories')->name('categories.')->group(function () {
     Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
 });
 // sản phẩm chi tiết
+Route::get('/product/{slug}', [Productcontroller::class, 'show'])->name('product.show');
 
+// Route cho comment
+Route::post('/product/{productId}/comment', [Productcontroller::class, 'addComment'])->name('product.comment');
 
 Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
