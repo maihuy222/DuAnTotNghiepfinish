@@ -71,7 +71,7 @@
 <div class="modal fade" id="adddanhmuc" tabindex="-1" role="dialog" aria-labelledby="addDanhMucLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ route('categories.store') }}">
+            <form method="POST" action="{{ route('categories.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="addDanhMucLabel">Thêm mới danh mục</h5>
@@ -95,6 +95,11 @@
                         <label for="name">Tên danh mục</label>
                         <input class="form-control" name="name" type="text" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="image">Ảnh danh mục</label>
+                        <input type="file" class="form-control-file" name="image" accept="image/*">
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -102,6 +107,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
