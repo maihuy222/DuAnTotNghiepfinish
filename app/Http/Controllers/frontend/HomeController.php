@@ -20,62 +20,86 @@ class HomeController extends Controller
             ->where('isDeleted', 0)
             ->take(5)
             ->get();
+
         $navCategories = DB::table('categories')
             ->where('show_in_nav', 1)
             ->where('isDeleted', 0)
             ->get();
+
         $latestProducts = DB::table('products') // sản phẩm mới nhất
             ->where('isDeleted', 0)
             ->orderByDesc('created_at')
             ->limit(5)
             ->get();
-        $bestSelling = Product::select('products.*', DB::raw('SUM(orderdetails.quantity) as total_sold'))
-            ->join('orderdetails', 'products.id', '=', 'orderdetails.product_id')
-            ->groupBy('products.id')
-            ->orderByDesc('total_sold')
-            ->take(5) // Top 8 sản phẩm bán chạy
-            ->get();
+
+        // Best selling products
+        $bestSelling = Product::select(
+            'products.id',
+            'products.name',
+            'products.slug',
+            'products.price',
+            'products.image',
+            DB::raw('SUM(orderdetails.quantity) as total_sold')
+        )
+        ->join('orderdetails', 'products.id', '=', 'orderdetails.product_id')
+        ->groupBy('products.id', 'products.name', 'products.slug', 'products.price', 'products.image')
+        ->orderByDesc('total_sold')
+        ->take(5)
+        ->get();
+
+        // Featured products
         $featuredProducts = Product::select(
-            'products.*',
+            'products.id',
+            'products.name',
+            'products.slug',
+            'products.price',
+            'products.image',
             DB::raw('SUM(orderdetails.quantity) as total_sold'),
             DB::raw('AVG(reviews.rating) as average_rating')
         )
-            ->leftJoin('orderdetails', 'products.id', '=', 'orderdetails.product_id')
-            ->leftJoin('reviews', 'products.id', '=', 'reviews.product_id')
-            ->where('products.isDeleted', 0)
-            ->groupBy('products.id')
-            ->orderByDesc('total_sold')
-            ->orderByDesc('average_rating')
-            ->orderByDesc('products.updated_at')
-            ->take(5)
-            ->get();
+        ->leftJoin('orderdetails', 'products.id', '=', 'orderdetails.product_id')
+        ->leftJoin('reviews', 'products.id', '=', 'reviews.product_id')
+        ->where('products.isDeleted', 0)
+        ->groupBy('products.id', 'products.name', 'products.slug', 'products.price', 'products.image')
+        ->orderByDesc('total_sold')
+        ->orderByDesc('average_rating')
+        ->orderByDesc('products.updated_at')
+        ->take(5)
+        ->get();
+
+        // Trending products
         $trendingProducts = Product::select(
-            'products.*',
+            'products.id',
+            'products.name',
+            'products.slug',
+            'products.price',
+            'products.image',
             DB::raw('COUNT(DISTINCT orderdetails.id) as order_count'),
             DB::raw('AVG(reviews.rating) as avg_rating')
         )
-            ->leftJoin('orderdetails', 'products.id', '=', 'orderdetails.product_id')
-            ->leftJoin('reviews', 'products.id', '=', 'reviews.product_id')
-            ->where('products.isDeleted', 0)
-            ->groupBy('products.id')
-            ->orderByDesc('order_count')
-            ->orderByDesc('avg_rating')
-            ->orderByDesc('products.updated_at')
-            ->take(5)
-            ->get();
-            // sản phẩm thịnh hành
+        ->leftJoin('orderdetails', 'products.id', '=', 'orderdetails.product_id')
+        ->leftJoin('reviews', 'products.id', '=', 'reviews.product_id')
+        ->where('products.isDeleted', 0)
+        ->groupBy('products.id', 'products.name', 'products.slug', 'products.price', 'products.image')
+        ->orderByDesc('order_count')
+        ->orderByDesc('avg_rating')
+->orderByDesc('products.updated_at')
+        ->take(5)
+        ->get();
 
-        // sản phẩm nối bật nhất
+        // Slider
         $sliders = DB::table('sliders')->get();
+
+        // Bài viết mới nhất
         $posts = Post::with(['category', 'author'])
             ->where('isDeleted', 0)
             ->orderBy('created_at', 'desc')
-            ->take(3) // lấy 6 bài viết mới nhất
+            ->take(3)
             ->get();
-      
-        // Truyền cả 2 biến sang view
+
+        // Truyền dữ liệu sang view
         return view('frontend.home', [
-            'bestSelling'=> $bestSelling,
+            'bestSelling' => $bestSelling,
             'products' => $products,
             'categories' => $categories,
             'latestProducts' => $latestProducts,
@@ -84,10 +108,6 @@ class HomeController extends Controller
             'posts' => $posts,
             'featuredProducts' => $featuredProducts,
             'trendingProducts' => $trendingProducts
-             // ✅ thêm dòng này
-
         ]);
     }
-
-  
 }
