@@ -67,20 +67,10 @@
 
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
+       
       
 
-        .container {
-            max-width: 1440px;
-            margin: 0 auto;
-            position: relative;
-        }
+      
 
 
         .close {

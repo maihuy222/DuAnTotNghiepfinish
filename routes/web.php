@@ -35,17 +35,17 @@ Route::get('/home', [HomeController::class, 'index'])
 
 // Group route cho user đã đăng nhập
 Route::middleware('auth')->group(function () {
-    // Trang chính của profile (thống kê, thông tin...)
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    // Trang chính của profile (thống kê, đơn hàng, thông tin)
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile'); // Sửa từ 'show' -> 'index'
 
-    // Trang chỉnh sửa thông tin cá nhân
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Cập nhật thông tin cá nhân
+    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update'); // Sửa 'update' -> 'updateProfile'
 
-    // Gửi form cập nhật thông tin cá nhân
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Đổi mật khẩu
+    Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword'); // Sửa 'profile.password' -> 'profile.changePassword'
 
-    // Xóa tài khoản
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Xem chi tiết đơn hàng
+    Route::get('/orders/{id}', [UserOrderController::class, 'show'])->name('orders.show');
 });
 
 

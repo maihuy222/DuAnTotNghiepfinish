@@ -30,4 +30,7 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetail::class);
     }
+    protected $casts = [
+        'total_amount' => 'float',
+    ];
 }

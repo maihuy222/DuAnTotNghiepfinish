@@ -31,12 +31,20 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|max:100|unique:categories,name',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Category::create([
+        $data = [
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-        ]);
+        ];
+
+        // Cập nhật ảnh nếu có
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('uploads/categories', 'public');
+        }
+
+        Category::create($data);
 
         return redirect()->route('categories.index')->with('success', 'Thêm danh mục thành công');
     }
@@ -55,12 +63,20 @@ class CategoryController extends Controller
 
         $request->validate([
             'name' => 'required|max:100|unique:categories,name,' . $id,
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $category->update([
+        $data = [
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-        ]);
+        ];
+
+        // Cập nhật ảnh nếu có
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('uploads/categories', 'public');
+        }
+
+        $category->update($data);
 
         return redirect()->route('categories.index')->with('success', 'Cập nhật danh mục thành công');
     }

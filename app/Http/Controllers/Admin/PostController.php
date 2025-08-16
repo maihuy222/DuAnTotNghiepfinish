@@ -35,6 +35,10 @@ class PostController extends Controller
             'image' => 'nullable|image',
             'category_id' => 'nullable|exists:postcategories,id',
             'employee_id' => 'nullable|exists:employees,id',
+        ], [
+            'title.required' => 'Vui lòng nhập tiêu đề.',
+            'title.max' => 'Tiêu đề không được vượt quá 200 ký tự.',
+            'content.required' => 'Vui lòng nhập nội dung.',
         ]);
 
         $data = $request->only(['title', 'content', 'category_id', 'employee_id']);

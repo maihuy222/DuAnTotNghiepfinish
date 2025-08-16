@@ -42,13 +42,15 @@
                         <!-- User Account -->
                         <div class="user-dropdown">
                             @auth
-
                             <button class="user-toggle btn btn-outline-light d-flex align-items-center gap-2"
                                 onclick="toggleDropdown()">
                                 <i class="fas fa-user"></i>
                                 <span class="d-none d-sm-inline">Chào, {{ Auth::user()->name }}</span>
                             </button>
                             <div id="dropdownMenu" class="dropdown-menu shadow">
+                                <a href="{{ route('profile') }}" class="dropdown-item">
+                                    <i class="fas fa-id-badge me-2"></i>Hồ sơ
+                                </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="logout-btn dropdown-item">
@@ -56,19 +58,16 @@
                                     </button>
                                 </form>
                             </div>
-
                             @else
                             <a href="{{ route('login') }}"
                                 class="btn btn-outline-light d-flex align-items-center gap-2 px-3 py-2 rounded-pill transition"
-                                style="background: while; border: 1px solid black; color: black;transition: all 0.3s ease;"
+                                style="background: white; border: 1px solid black; color: black; transition: all 0.3s ease;"
                                 title="Đăng nhập">
                                 <i class="fas fa-user"></i>
                                 <span>Đăng nhập</span>
                             </a>
-
-
-
                             @endauth
+
                         </div>
                         <!-- Wishlist -->
                         <a href="#" class="action-btn btn btn-outline-light rounded-circle" title="Yêu thích">
