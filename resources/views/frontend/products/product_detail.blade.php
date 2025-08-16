@@ -42,26 +42,22 @@
                         <div class="form-group">
                             <label class="form-label">Chọn kích cỡ:</label>
                             <div class="size-options">
-                                <label class="size-option">
-                                    <input type="radio" name="size_id" value="1" class="size-radio" data-price="70000">
-                                    <span class="size-text">S</span>
-                                    <span class="size-price">70.000₫</span>
-                                </label>
-                                <label class="size-option">
-                                    <input type="radio" name="size_id" value="2" class="size-radio" data-price="95000">
-                                    <span class="size-text">M</span>
-                                    <span class="size-price">95.000₫</span>
-                                </label>
-                                <label class="size-option">
-                                    <input type="radio" name="size_id" value="3" class="size-radio" data-price="100000">
-                                    <span class="size-text">L</span>
-                                    <span class="size-price">100.000₫</span>
-                                </label>
-                                <label class="size-option">
-                                    <input type="radio" name="size_id" value="4" class="size-radio" data-price="110000">
-                                    <span class="size-text">XL</span>
-                                    <span class="size-price">110.000₫</span>
-                                </label>
+                                @if($product->sizes && count($product->sizes) > 0)
+                                    @foreach($product->sizes as $size)
+                                    <label class="size-option">
+                                        <input type="radio" name="size_id" value="{{ $size->id }}" class="size-radio" data-price="{{ $size->pivot->price }}">
+                                        <span class="size-text">{{ $size->name }}</span>
+                                        <span class="size-price">{{ number_format($size->pivot->price, 0, ',', '.') }}₫</span>
+                                    </label>
+                                    @endforeach
+                                @else
+                                    <!-- Nếu không có size, hiển thị giá gốc của sản phẩm -->
+                                    <label class="size-option">
+                                        <input type="radio" name="size_id" value="" class="size-radio" data-price="{{ $product->price }}" checked>
+                                        <span class="size-text">Mặc định</span>
+                                        <span class="size-price">{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                    </label>
+                                @endif
                             </div>
                         </div>
 
@@ -78,11 +74,18 @@
                         <!-- Giá -->
                         <div class="price-section">
                             <label class="price-label">Giá:</label>
-                            <span class="total-price" id="totalPrice">70.000₫</span>
+                            <span class="total-price" id="totalPrice">
+                                @if($product->sizes && count($product->sizes) > 0)
+                                    {{ number_format($product->sizes->first()->pivot->price, 0, ',', '.') }}₫
+                                @else
+                                    {{ number_format($product->price, 0, ',', '.') }}₫
+                                @endif
+                            </span>
                         </div>
 
                         <!-- Hidden input để gửi giá thực tế -->
-                        <input type="hidden" name="price" id="priceInput" value="70000">
+                        <input type="hidden" name="price" id="priceInput" 
+                               value="@if($product->sizes && count($product->sizes) > 0){{ $product->sizes->first()->pivot->price }}@else{{ $product->price }}@endif">
 
                         <!-- Nút đặt món -->
                         <button type="submit" class="order-btn">Đặt món ngay</button>
@@ -576,6 +579,34 @@
             // Auto select first size
             sizeRadios[0].checked = true;
             sizeRadios[0].dispatchEvent(new Event('change'));
+        } else {
+            // Nếu không có size nào, sử dụng giá gốc của sản phẩm
+            const defaultPrice = {{ $product->price }};
+            if (totalPrice) {
+                totalPrice.textContent = defaultPrice.toLocaleString('vi-VN') + '₫';
+            }
+            if (priceInput) {
+                priceInput.value = defaultPrice;
+            }
+        }
+
+        // Xử lý trường hợp không có size được chọn
+        const sizeFormGroup = document.querySelector('.form-group');
+        if (sizeFormGroup) {
+            const noSizeOption = sizeFormGroup.querySelector('input[value=""]');
+            if (noSizeOption) {
+                noSizeOption.addEventListener('change', function() {
+                    if (this.checked) {
+                        const defaultPrice = {{ $product->price }};
+                        if (totalPrice) {
+                            totalPrice.textContent = defaultPrice.toLocaleString('vi-VN') + '₫';
+                        }
+                        if (priceInput) {
+                            priceInput.value = defaultPrice;
+                        }
+                    }
+                });
+            }
         }
 
         // Thumbnail gallery
