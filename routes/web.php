@@ -108,8 +108,8 @@ Route::get('/test-comments', function () {
         Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
         Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
         });
-
-        
+// sản phẩm chi tiết
+        Route::get('/product/{slug}', [Productcontroller::class, 'show'])->name('product.show');
 
         // Route cho comment
         Route::post('/product/{productId}/comment', [Productcontroller::class, 'addComment'])->name('product.comment');
@@ -176,7 +176,6 @@ Route::get('/test-comments', function () {
         Route::put('/admin/update/{id}', [thuocTinhController::class, 'update'])->name('admin.thuoctinh.update');
         Route::delete('/admin/delete/{id}', [thuocTinhController::class, 'destroy'])->name('admin.thuoctinh.delete');
         Route::get('/admin/deleteall', [thuocTinhController::class, 'destroyAll'])->name('admin.thuoctinh.deleteAll');
-        Route::get('/product/{slug}', [Productcontroller::class, 'show'])->name('product.show');
 
 
 
