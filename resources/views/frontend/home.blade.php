@@ -179,14 +179,23 @@
                                             </h6>
 
                                             <div class="d-flex align-items-center mb-2 rating-section">
+                                                @php
+                                                    $avg = round(($product->avg_rating ?? 0), 1);
+                                                    $full = floor($avg);
+                                                    $hasHalf = ($avg - $full) >= 0.5;
+                                                @endphp
                                                 <div class="text-warning small">
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $full)
+                                                            <i class="fas fa-star"></i>
+                                                        @elseif ($i == $full + 1 && $hasHalf)
+                                                            <i class="fas fa-star-half-alt"></i>
+                                                        @else
+                                                            <i class="far fa-star"></i>
+                                                        @endif
+                                                    @endfor
                                                 </div>
-                                                <span class="text-muted small ms-1">(4.5)</span>
+                                                <span class="text-muted small ms-1">({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} đánh giá)</span>
                                             </div>
 
                                             <div class="price-section">
@@ -317,14 +326,23 @@
                                 </h6>
 
                                 <div class="d-flex align-items-center mb-2 rating-section">
+                                    @php
+                                        $avg = round(($product->avg_rating ?? 0), 1);
+                                        $full = floor($avg);
+                                        $hasHalf = ($avg - $full) >= 0.5;
+                                    @endphp
                                     <div class="text-warning small">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $full)
+                                                <i class="fas fa-star"></i>
+                                            @elseif ($i == $full + 1 && $hasHalf)
+                                                <i class="fas fa-star-half-alt"></i>
+                                            @else
+                                                <i class="far fa-star"></i>
+                                            @endif
+                                        @endfor
                                     </div>
-                                    <span class="text-muted small ms-1">(4.5)</span>
+                                    <span class="text-muted small ms-1">({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} đánh giá)</span>
                                 </div>
 
                                 <div class="price-section">
@@ -468,14 +486,23 @@
                                     </h6>
 
                                     <div class="d-flex align-items-center mb-2 rating-section">
+                                        @php
+                                            $avg = round(($product->avg_rating ?? 0), 1);
+                                            $full = floor($avg);
+                                            $hasHalf = ($avg - $full) >= 0.5;
+                                        @endphp
                                         <div class="text-warning small">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $full)
+                                                    <i class="fas fa-star"></i>
+                                                @elseif ($i == $full + 1 && $hasHalf)
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                @else
+                                                    <i class="far fa-star"></i>
+                                                @endif
+                                            @endfor
                                         </div>
-                                        <span class="text-muted small ms-1">(4.5)</span>
+                                        <span class="text-muted small ms-1">({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} đánh giá)</span>
                                     </div>
 
                                     <div class="price-section">

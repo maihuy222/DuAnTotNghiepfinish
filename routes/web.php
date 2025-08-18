@@ -132,6 +132,8 @@ Route::get('/product/{slug}', [Productcontroller::class, 'show'])->name('product
 
 // Route cho comment
 Route::post('/product/{productId}/comment', [Productcontroller::class, 'addComment'])->name('product.comment');
+// Route cho review (đánh giá sao)
+Route::post('/product/{productId}/review', [Productcontroller::class, 'addReview'])->name('product.review');
 
 Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
