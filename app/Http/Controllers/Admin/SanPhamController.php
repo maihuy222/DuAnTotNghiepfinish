@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Category;
+use Illuminate\Support\Str;
 
 class SanPhamController extends Controller
 {
@@ -16,16 +17,28 @@ class SanPhamController extends Controller
             ->select('products.*', 'categories.name as category_name')
             ->where('products.isDeleted', 0) // Chỉ lấy sản phẩm chưa bị xóa
             ->get();
+        foreach ($products as $product) {
+            $product->sizes = DB::table('productsizes') // tên bảng đúng
+                ->join('sizes', 'productsizes.size_id', '=', 'sizes.id')
+                ->where('productsizes.product_id', $product->id)
+                ->where('productsizes.isDeleted', 0)
+                ->select('sizes.name', 'productsizes.price')
+                ->get();
+        }
 
-        return view('admin.quanlysanpham', ['products' => $products]);
+        return view('admin.products.quanlysanpham', ['products' => $products]);
+       
     }
      function create()
     {
         $categories = DB::table('categories')->get();
-        return view('admin.addsanpham', compact('categories'));
+        $sizes = DB::table('sizes')->where('isDeleted', 0)->get();
+
+        return view('admin.products.addsanpham', compact('categories', 'sizes'));
     }
   function store(Request $request)
     {
+       
         // Validate dữ liệu
         $request->validate([
             'name' => 'required|string|max:100',
@@ -34,8 +47,20 @@ class SanPhamController extends Controller
             'category_id' => 'nullable|exists:categories,id',
             'status' => 'required|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120', // 5MB
-            'description' => 'nullable|string' 
-            
+            'description' => 'nullable|string'     
+        ], [
+            'name.required' => 'Vui lòng nhập tên sản phẩm.',
+            'name.unique'   => 'Tên sản phẩm đã tồn tại.',
+            'quantity.required' => 'Vui lòng nhập số lượng.',
+            'quantity.integer' => 'Số lượng phải là số nguyên.',
+            'price.required' => 'Vui lòng nhập giá sản phẩm.',
+            'price.numeric' => 'Giá phải là số.',
+            'status.required' => 'Vui lòng chọn tình trạng.',
+            'category_id.required' => 'Vui lòng chọn danh mục.',
+            'category_id.exists' => 'Danh mục đã chọn không hợp lệ.',
+            'image.image'   => 'Tệp tải lên phải là hình ảnh.',
+            'image.mimes'   => 'Ảnh phải có định dạng jpg, jpeg, png, gif hoặc svg.',
+            'image.max'     => 'Kích thước ảnh tối đa là 2MB.',
         ]);
 
         // Xử lý upload ảnh
@@ -57,10 +82,11 @@ class SanPhamController extends Controller
             // Đường dẫn lưu trong database (tương đối)
             $imagePath = 'uploads/products/' . $newName;
         }
-
+        $slug = Str::slug($request->name);
         // Thêm sản phẩm vào database
         DB::table('products')->insert([
             'name' => $request->name,
+            'slug' => Str::slug($request->name),
             'price' => $request->price,
             'description' => $request->description,
             'category_id' => $request->category_id,
@@ -71,18 +97,44 @@ class SanPhamController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect()->route('products.create')->with('success', 'Thêm sản phẩm thành công!');
+         $productId = DB::getPdo()->lastInsertId();
+        if ($request->has('prices')) {
+            foreach ($request->prices as $sizeId => $price) {
+                if ($price !== null && $price >= 0) {
+                    DB::table('productsizes')->insert([
+                        'product_id' => $productId,
+                        'size_id' => $sizeId,
+                        'price' => $price,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+            }
+        }
+
+
+        return redirect()->route('admin.products.index')->with('success', 'Thêm sản phẩm thành công!');
     }
          function edit($id)
     {
         $product = DB::table('products')->find($id);
         $categories = DB::table('categories')->get();
+        $sizes = DB::table('sizes')->where('isDeleted', 0)->get();
+        $sizesData = DB::table('productsizes')
+            ->where('product_id', $id)
+            ->get();
+
+        // Chuyển thành mảng size_id => price
+        $productSizes = [];
+        foreach ($sizesData as $item) {
+            $productSizes[$item->size_id] = $item->price;
+        }
 
         if (!$product) {
             return redirect()->route('products.index')->with('error', 'Sản phẩm không tồn tại.');
         }
 
-        return view('admin.editSanPham', compact('product', 'categories'));
+        return view('admin.products.editSanPham', compact('product', 'categories', 'sizes', 'productSizes'));
     }
 
     // 👉 2️⃣ Cập nhật sản phẩm
@@ -116,9 +168,41 @@ class SanPhamController extends Controller
             $file->move(public_path('uploads/products'), $newName);
             $imagePath = 'uploads/products/' . $newName;
         }
+        // Xóa size cũ trước khi thêm size mới
+        DB::table('product_sizes')->where('product_id', $id)->delete();
 
+        // Thêm size mới (giá phải hợp lệ)
+        if ($request->has('sizes') && $request->has('prices')) {
+            foreach ($request->sizes as $sizeId => $value) {
+                if (isset($request->prices[$sizeId]) && $request->prices[$sizeId] !== null) {
+                    DB::table('product_sizes')->insert([
+                        'product_id' => $id,
+                        'size_id' => $sizeId,
+                        'price' => $request->prices[$sizeId],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
+        if ($request->has('sizes') && $request->has('prices')) {
+            foreach ($request->sizes as $sizeId => $value) {
+                if (isset($request->prices[$sizeId]) && $request->prices[$sizeId] !== null) {
+                    DB::table('product_sizes')->insert([
+                        'product_id' => $id,
+                        'size_id' => $sizeId,
+                        'price' => $request->prices[$sizeId],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
+
+        $slug = Str::slug($request->name);
         DB::table('products')->where('id', $id)->update([
             'name' => $request->name,
+            'slug' => $slug,
             'price' => $request->price,
             'description' => $request->description,
             'category_id' => $request->category_id,

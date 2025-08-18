@@ -126,6 +126,10 @@
                 </a>
 
             </li>
+            <li>
+                <a class="app-menu__item" href="{{ route('admin.thuoctinh') }}">
+                    <i class="app-menu__icon bx bx-images"></i>
+                    <span class="app-menu__label">Quản lý Thuộc tính
 
 
 

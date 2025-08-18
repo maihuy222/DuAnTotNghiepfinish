@@ -13,7 +13,7 @@
 
 
             <div class="login-box">
-                <h2>Login</h2>
+                <h2>Đăng nhập</h2>
 
                 {{-- Hiển thị thông báo lỗi chung --}}
                 @if (session('status'))
@@ -27,36 +27,29 @@
                     @csrf
 
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}">
                     @error('email')
                     <div style="color: red; font-size: 14px;">{{ $message }}</div>
                     @enderror
 
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password">
                     @error('password')
                     <div style="color: red; font-size: 14px;">{{ $message }}</div>
                     @enderror
 
                     <div class="forgot">
-                        <a href="{{ route('password.request') }}" style="color: #facc15;">Forgot Password?</a>
+                        <a href="{{ route('password.request') }}" style="color: #facc15;">Quân mật khẩu</a>
                     </div>
 
-                    <button type="submit" class="login-btn">Sign in</button>
+                    <button type="submit" class="login-btn">Đăng nhập</button>
                 </form>
 
-                <div class="social-login">
-                    <span>or continue with</span>
-                    <div class="social-icons">
-                        <div><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"></div>
-                        <div><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" alt="Facebook"></div>
-                        <div><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple"></div>
-                    </div>
-                </div>
+           
 
                 <div class="register">
-                    Don’t have an account yet?
-                    <a href="{{ route('register') }}">Register here</a>
+                    Bạn chưa có tài khoản?
+                    <a href="{{ route('register') }}">Đăng ký ngay</a>
                 </div>
             </div>
         </div>
@@ -67,12 +60,6 @@
 
 
     <style>
-       
-      
-
-      
-
-
         .close {
             position: absolute;
             right: 40px;

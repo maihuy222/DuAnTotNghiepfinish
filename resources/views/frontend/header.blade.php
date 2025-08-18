@@ -48,16 +48,21 @@
                                 <span class="d-none d-sm-inline">Chào, {{ Auth::user()->name }}</span>
                             </button>
                             <div id="dropdownMenu" class="dropdown-menu shadow">
-                                <a href="{{ route('profile') }}" class="dropdown-item">
-                                    <i class="fas fa-id-badge me-2"></i>Hồ sơ
-                                </a>
-                                <form method="POST" action="{{ route('logout') }}">
+
+                                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                                     @csrf
                                     <button type="submit" class="logout-btn dropdown-item">
                                         <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
                                     </button>
                                 </form>
+                                <div>
+                                    <a href="{{ route('profile') }}" class="dropdown-item">
+                                        <i class="fas fa-id-badge me-2"></i>Hồ sơ
+                                    </a>
+                                </div>
+                            
                             </div>
+
                             @else
                             <a href="{{ route('login') }}"
                                 class="btn btn-outline-light d-flex align-items-center gap-2 px-3 py-2 rounded-pill transition"
@@ -70,9 +75,13 @@
 
                         </div>
                         <!-- Wishlist -->
-                        <a href="#" class="action-btn btn btn-outline-light rounded-circle" title="Yêu thích">
+                        <a href="{{ route('favorites.index') }}"
+                            class="action-btn btn btn-outline-light rounded-circle"
+                            title="Yêu thích">
                             <i class="fas fa-heart"></i>
                         </a>
+
+
 
                         <!-- Mobile Search -->
                         <a href="#" class="action-btn btn btn-outline-light rounded-circle d-md-none"

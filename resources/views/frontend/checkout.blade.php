@@ -115,10 +115,6 @@
                                     <span>Phí vận chuyển:</span>
                                     <span class="text-success fw-semibold">Miễn phí</span>
                                 </div>
-                                <div class="summary-row d-flex justify-content-between mb-3">
-                                    <span>Thuế VAT:</span>
-                                    <span class="text-success">Đã bao gồm</span>
-                                </div>
                                 <hr class="my-3">
                                 <div class="summary-total d-flex justify-content-between">
                                     <span class="fw-bold fs-5">Tổng cộng:</span>
@@ -190,14 +186,7 @@
                     </div>
 
                     <!-- Security Notice -->
-                    <div class="security-notice mt-4 p-3 bg-light rounded">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-lock text-success me-2"></i>
-                            <small class="text-muted">
-                                Thông tin của bạn được bảo mật với công nghệ SSL 256-bit
-                            </small>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
 

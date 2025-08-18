@@ -98,15 +98,15 @@
                     <div class="col-md-12">
 
                         <div class="category-carousel swiper">
-                            @foreach($categories as $category)
                             <div class="swiper-wrapper">
-                                <a href="index.html" class="nav-link category-item swiper-slide">
-                                    <img src="images/icon-vegetables-broccoli.png" alt="Category Thumbnail">
-                                    <h3 class="category-title">Fruits & Veges</h3>
-                                </a>
+                                @foreach($categories as $category)
+                                <a href="{{ url('category/' . $category->slug) }}" class="nav-link category-item swiper-slide">
 
-                            @endforeach
+                                    <h3 class="category-title">{{ $category->name }}</h3>
+                                </a>
+                                @endforeach
                             </div>
+
                         </div>
 
                     </div>
@@ -117,11 +117,6 @@
         </div>
     </div>
 </section>
-
-
-
-
-
 <section class="py-4">
     <div class="container">
 
@@ -240,7 +235,7 @@
                         <div class="categories text-primary fs-3 fw-bold">Siêu siêu ngon</div>
                         <h3 class="banner-title">Đồ ăn</h3>
                         <p>"No bụng mới ấm lòng, chứ yêu đương không ăn được đâu!</p>
-                        <a href="#" class="btn btn-dark text-uppercase">Mua ngay</a>
+                        <a href="{{ url('category/do-an') }}" class="btn btn-dark text-uppercase">Mua ngay</a>
 
                     </div>
                 </div>
@@ -250,9 +245,9 @@
                     <div class="banner-content p-5">
 
                         <div class="categories text-primary fs-3 fw-bold">Siêu siêu ngon</div>
-                        <h3 class="banner-title">Trà sữa</h3>
+                        <h3 class="banner-title">Đồ uống</h3>
                         <p>Tiền không mua được tất cả, nhưng mua được trà sữa – là đủ rồi</p>
-                        <a href="#" class="btn btn-dark text-uppercase">Mua ngay</a>
+                        <a href="{{ url('category/do-uong')}}" class="btn btn-dark text-uppercase">Mua ngay</a>
 
                     </div>
                 </div>
@@ -293,15 +288,40 @@
 
                                 <div class="product-overlay d-flex align-items-center justify-content-center">
                                     <div class="d-flex gap-2">
-                                        <button class="btn btn-light btn-sm rounded-circle action-btn">
+                                        {{-- Nút xem chi tiết --}}
+                                        <a href="{{ route('product.show', $product->slug) }}"
+                                            class="btn btn-light btn-sm rounded-circle action-btn"
+                                            title="Xem chi tiết">
                                             <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-light btn-sm rounded-circle action-btn">
+                                        </a>
+
+                                        {{-- Nút yêu thích --}}
+                                        @auth
+                                        @php
+                                        $isFavorite = \App\Models\Favorite::where('user_id', Auth::id())
+                                        ->where('product_id', $product->id)
+                                        ->exists();
+                                        @endphp
+                                        <form action="{{ route('favorites.toggle') }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <button type="submit"
+                                                class="btn btn-sm rounded-circle action-btn {{ $isFavorite ? 'btn-danger' : 'btn-light' }}"
+                                                title="{{ $isFavorite ? 'Bỏ yêu thích' : 'Thêm yêu thích' }}">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                        </form>
+                                        @else
+                                        <a href="{{ route('login') }}"
+                                            class="btn btn-light btn-sm rounded-circle action-btn"
+                                            title="Đăng nhập để yêu thích">
                                             <i class="fas fa-heart"></i>
-                                        </button>
+                                        </a>
+                                        @endauth
                                     </div>
                                 </div>
 
+                                {{-- Badge giảm giá --}}
                                 @if(isset($product->discount) && $product->discount > 0)
                                 <div class="position-absolute top-0 start-0 p-2">
                                     <span class="badge bg-danger">-{{ $product->discount }}%</span>
@@ -311,11 +331,14 @@
 
                             <div class="card-body p-3">
                                 <h6 class="card-title product-name">
-                                    <a href="{{ route('product.show', $product->slug) }}" title="{{ $product->name }}" class="text-decoration-none text-dark">
+                                    <a href="{{ route('product.show', $product->slug) }}"
+                                        title="{{ $product->name }}"
+                                        class="text-decoration-none text-dark">
                                         {{ $product->name }}
                                     </a>
                                 </h6>
 
+                                {{-- Đánh giá --}}
                                 <div class="d-flex align-items-center mb-2 rating-section">
                                     <div class="text-warning small">
                                         <i class="fas fa-star"></i>
@@ -327,10 +350,12 @@
                                     <span class="text-muted small ms-1">(4.5)</span>
                                 </div>
 
+                                {{-- Giá --}}
                                 <div class="price-section">
-                                    <span class="h6 text-danger fw-bold mb-0">
+                                    <span style="font-weight: 900; color: #b20000; font-size: 1.2rem;">
                                         {{ number_format($product->price, 0, ',', '.') }}₫
                                     </span>
+
                                     @if(isset($product->original_price) && $product->original_price > $product->price)
                                     <div class="text-muted small text-decoration-line-through">
                                         {{ number_format($product->original_price, 0, ',', '.') }}₫
@@ -338,6 +363,7 @@
                                     @endif
                                 </div>
 
+                                {{-- Nút thêm giỏ hàng --}}
                                 <form action="{{ route('cart.add', $product->id) }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="price" value="{{ $product->price }}">
@@ -345,8 +371,6 @@
                                         <i class="fas fa-shopping-cart me-1"></i> Thêm vào giỏ
                                     </button>
                                 </form>
-
-
                             </div>
                         </div>
                     </div>
@@ -365,49 +389,43 @@
     </div>
 </section>
 
-
 <section class="py-4">
     <div class="container">
-
-        <div class="bg-secondary py-5 my-5 rounded-5" style="background: url('images/bg-leaves-img-pattern.png') no-repeat;">
-            <div class="container my-5">
-                <div class="row">
-                    <div class="col-md-6 p-5">
+        <div class="bg-warning rounded-5 text-dark"
+            style="background: url('images/food-banner.png') no-repeat right center/contain; min-height: 400px;">
+            <div class="container py-5">
+                <div class="row align-items-center">
+                    <div class="col-md-6 p-4">
                         <div class="section-header">
-                            <h2 class="section-title display-4">Get <span class="text-primary">25% Discount</span> on your first purchase</h2>
+                            <h2 class="section-title display-5 fw-bold">
+                                🚀 Giao hàng tận nơi <span class="text-danger">30 phút</span>
+                            </h2>
                         </div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dictumst amet, metus, sit massa posuere maecenas. At tellus ut nunc amet vel egestas.</p>
+                        <p class="lead">
+                            Đặt món ăn yêu thích chỉ với vài cú click.
+                            Thức ăn nóng hổi, hương vị thơm ngon, phục vụ nhanh chóng ngay tại nhà bạn.
+                        </p>
+                        <div class="mt-4">
+                            <a href="{{ url('/products') }}" class="btn btn-danger btn-lg rounded-pill px-4">
+                                Xem thực đơn
+                            </a>
+                         
+                        </div>
                     </div>
-                    <div class="col-md-6 p-5">
-                        <form>
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text"
-                                    class="form-control form-control-lg" name="name" id="name" placeholder="Name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="" class="form-label">Email</label>
-                                <input type="email" class="form-control form-control-lg" name="email" id="email" placeholder="abc@mail.com">
-                            </div>
-                            <div class="form-check form-check-inline mb-3">
-                                <label class="form-check-label" for="subscribe">
-                                    <input class="form-check-input" type="checkbox" id="subscribe" value="subscribe">
-                                    Subscribe to the newsletter</label>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-dark btn-lg">Submit</button>
-                            </div>
-                        </form>
-
+                    <div class="col-md-6 text-center">
+                        <img src="{{ asset('frontend/assets/img/giaohang.png') }}"
+                            alt="Giao hàng nhanh"
+                            class="img-fluid"
+                            style="max-height: 320px;">
                     </div>
-
                 </div>
-
             </div>
         </div>
-
     </div>
 </section>
+
+
+
 
 <section class="py-5 overflow-hidden">
     <div class="container">

@@ -82,9 +82,10 @@
                     </div>
 
                     <div class="price-section">
-                        <span class="h6 text-danger fw-bold mb-0">
+                        <span style="font-weight: 900; color: #b20000; font-size: 1.2rem;">
                             {{ number_format($product->price, 0, ',', '.') }}₫
                         </span>
+
                         @if(isset($product->original_price) && $product->original_price > $product->price)
                         <div class="text-muted small text-decoration-line-through">
                             {{ number_format($product->original_price, 0, ',', '.') }}₫

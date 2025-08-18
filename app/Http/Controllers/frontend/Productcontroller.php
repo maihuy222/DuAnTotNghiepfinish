@@ -38,9 +38,11 @@ class Productcontroller extends Controller
     public function index()
     {
         $products = DB::table('products')
+            ->select('id', 'name', 'slug', 'price', 'image') // thêm slug
             ->where('isDeleted', 0)
             ->orderBy('created_at', 'desc')
             ->get();
+
 
         return view('frontend.products.index', compact('products'));
     }

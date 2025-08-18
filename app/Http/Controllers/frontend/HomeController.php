@@ -18,7 +18,7 @@ class HomeController extends Controller
         // Lấy danh sách danh mục (chưa bị xóa)
         $categories = DB::table('categories')
             ->where('isDeleted', 0)
-            ->take(5)
+            ->take(6)
             ->get();
 
         $navCategories = DB::table('categories')

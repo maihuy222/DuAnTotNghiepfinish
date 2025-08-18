@@ -81,6 +81,7 @@
                 </div>
 
                 <div class="modal-body">
+                    {{-- Thông báo lỗi tổng --}}
                     @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul class="mb-0">
@@ -91,14 +92,22 @@
                     </div>
                     @endif
 
+                    {{-- Tên danh mục --}}
                     <div class="form-group">
                         <label for="name">Tên danh mục</label>
-                        <input class="form-control" name="name" type="text" required>
+                        <input class="form-control" name="name" type="text" value="{{ old('name') }}">
+                        @error('name')
+                        <div style="color: red; font-size: 14px;">{{ $message }}</div>
+                        @enderror
                     </div>
 
+                    {{-- Ảnh danh mục --}}
                     <div class="form-group">
                         <label for="image">Ảnh danh mục</label>
                         <input type="file" class="form-control-file" name="image" accept="image/*">
+                        @error('image')
+                        <div style="color: red; font-size: 14px;">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -112,7 +121,8 @@
     </div>
 </div>
 
-<!-- JS -->
+@endsection
+
 @section('js')
 <script type="text/javascript" src="{{ asset('admin/assets/js/plugins/jquery.dataTables.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('admin/assets/js/plugins/dataTables.bootstrap.min.js') }}"></script>
@@ -123,5 +133,7 @@
         $('#sampleTable tbody :checkbox').prop('checked', $(this).is(':checked'));
         e.stopImmediatePropagation();
     });
+
+    // Tự mở modal nếu có lỗi
 </script>
 @endsection

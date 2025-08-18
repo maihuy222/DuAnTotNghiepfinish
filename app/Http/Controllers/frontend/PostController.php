@@ -22,10 +22,15 @@ class PostController extends Controller
     // Hiển thị chi tiết bài viết
     public function show($id)
     {
-        $post = Post::with('postcategory', 'employee')
-            ->where('isDeleted', 0)
-            ->findOrFail($id);
+        $post = Post::with('author', 'category')->findOrFail($id);
 
-        return view('admin.posts.show', compact('post'));
+        // Lấy 5 bài viết khác cùng danh mục, trừ bài hiện tại
+        $ChitietPosts = Post::where('category_id', $post->category_id)
+            ->where('id', '<>', $id)
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('frontend.blog.show', compact('post', 'ChitietPosts'));
     }
 }

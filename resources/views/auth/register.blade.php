@@ -36,14 +36,7 @@
                     <button class="login-btn" type="submit">Register</button>
                 </form>
 
-                <div class="social-login">
-                    <span>or continue with</span>
-                    <div class="social-icons">
-                        <div><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"></div>
-                        <div><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" alt="Facebook"></div>
-                        <div><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple"></div>
-                    </div>
-                </div>
+    
 
                 <div class="register">
                     Already have an account?
@@ -54,29 +47,6 @@
     </div>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
-    }
-
-    body {
-        background-color: #fff;
-        /* ✅ Nền trắng */
-        color: #111;
-        /* ✅ Chữ màu tối để dễ đọc trên nền trắng */
-        height: 100vh;
-        overflow-x: hidden;
-    }
-
-    .container {
-        max-width: 1440px;
-        margin: 0 auto;
-        position: relative;
-    }
-
-
     .close {
         position: absolute;
         right: 40px;

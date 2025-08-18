@@ -139,22 +139,7 @@
                     </div>
 
                     <!-- Promotion Code -->
-                    <div class="card shadow-sm border-0 mt-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0 fw-semibold">
-                                <i class="fas fa-gift me-2 text-warning"></i>
-                                Mã giảm giá
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Nhập mã giảm giá">
-                                <button class="btn btn-outline-primary" type="button">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                 
                 </div>
             </div>
 

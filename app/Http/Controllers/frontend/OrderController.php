@@ -126,4 +126,18 @@ public function index()
 
         return view('frontend.checkout', compact('cart'));
     }
+    public function cancel($id)
+    {
+        $order = Order::where('user_id', Auth::id())->findOrFail($id);
+
+        // Chỉ cho hủy nếu đơn đang pending
+        if ($order->status !== 'pending') {
+            return redirect()->back()->with('error', 'Đơn hàng không thể hủy.');
+        }
+
+        $order->status = 'cancelled';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Đơn hàng đã được hủy thành công.');
+    }
 }

@@ -148,6 +148,39 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group col-md-12">
+                                <label class="control-label">Kích thước / Size</label>
+                                <div class="row">
+                                    @foreach($sizes as $size)
+                                    <div class="col-md-2 mb-2">
+                                        <div class="form-check">
+                                            <!-- Checkbox chọn size -->
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                name="sizes[{{ $size->id }}]"
+                                                value="1"
+                                                id="size{{ $size->id }}"
+                                                {{ isset($productSizes[$size->id]) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="size{{ $size->id }}">
+                                                {{ $size->name }}
+                                            </label>
+
+                                            <!-- Input giá size -->
+                                            <input
+                                                type="number"
+                                                name="prices[{{ $size->id }}]"
+                                                placeholder="Giá {{ $size->name }}"
+                                                class="form-control mt-1"
+                                                min="0"
+                                                value="{{ old('prices.'.$size->id, $productSizes[$size->id] ?? '') }}">
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+
 
                             <!-- Ảnh sản phẩm -->
                             <div class="form-group col-md-12">

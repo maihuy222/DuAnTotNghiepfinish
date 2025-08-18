@@ -90,7 +90,37 @@
 
 
 
+
     @include('frontend.header')
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+        <div id="liveToast" class="toast align-items-center text-bg-success border-0"
+            role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Đóng"></button>
+            </div>
+        </div>
+    </div>
+
+    @if(session('success') || session('error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const toastEl = document.getElementById('liveToast');
+            const toastBody = document.getElementById('toastMessage');
+            toastBody.textContent = "{{ session('success') ?? session('error') }}";
+
+            if ("{{ session('error') }}") {
+                toastEl.classList.remove('text-bg-success');
+                toastEl.classList.add('text-bg-danger');
+            }
+
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    </script>
+    @endif
+
     @yield('content')
     @include('frontend.footer')
 
@@ -102,6 +132,52 @@
     <script src="{{ asset('assets/js/plugins.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.favorite-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    let productId = this.dataset.productId;
+                    let button = this;
+
+                    fetch("{{ route('favorites.toggle') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            body: JSON.stringify({
+                                product_id: productId
+                            })
+                        })
+                        .then(res => {
+                            if (!res.ok) {
+                                if (res.status === 401) {
+                                    alert('Vui lòng đăng nhập để sử dụng tính năng này.');
+                                    window.location.href = "{{ route('login') }}";
+                                }
+                                throw new Error(`HTTP error! status: ${res.status}`);
+                            }
+                            return res.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'added') {
+                                button.classList.remove('btn-light');
+                                button.classList.add('btn-danger');
+                                button.title = 'Bỏ yêu thích';
+                            } else if (data.status === 'removed') {
+                                button.classList.remove('btn-danger');
+                                button.classList.add('btn-light');
+                                button.title = 'Thêm yêu thích';
+                            }
+                        })
+                        .catch(err => console.error(err));
+                });
+            });
+        });
+    </script>
+
+
+
     <script>
         const searchInput = document.getElementById('searchInput');
         const autocompleteList = document.getElementById('autocompleteList');
@@ -146,6 +222,7 @@
             }
         });
     </script>
+
 
 
     @yield('js')

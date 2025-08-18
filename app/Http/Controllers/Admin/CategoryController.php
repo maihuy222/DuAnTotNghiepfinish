@@ -62,9 +62,18 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|max:100|unique:categories,name,' . $id,
+            'name'  => 'required|string|max:100|unique:categories,name,' . $id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            'name.required' => 'Vui lòng nhập tên danh mục.',
+            'name.string'   => 'Tên danh mục phải là chuỗi.',
+            'name.max'      => 'Tên danh mục không được vượt quá 100 ký tự.',
+            'name.unique'   => 'Tên danh mục đã tồn tại.',
+            'image.image'   => 'Tệp tải lên phải là hình ảnh.',
+            'image.mimes'   => 'Ảnh phải có định dạng jpeg, png, jpg, gif hoặc svg.',
+            'image.max'     => 'Kích thước ảnh tối đa là 2MB.',
         ]);
+
 
         $data = [
             'name' => $request->name,

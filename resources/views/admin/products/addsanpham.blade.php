@@ -1,76 +1,5 @@
 @extends('admin.layout')
 @section('content')
-<style>
-    .Choicefile {
-        display: block;
-        background: #14142B;
-        border: 1px solid #fff;
-        color: #fff;
-        width: 150px;
-        text-align: center;
-        text-decoration: none;
-        cursor: pointer;
-        padding: 5px 0px;
-        border-radius: 5px;
-        font-weight: 500;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .Choicefile:hover {
-        text-decoration: none;
-        color: white;
-    }
-
-    #uploadfile,
-    .removeimg {
-        display: none;
-    }
-
-    #thumbbox {
-        position: relative;
-        width: 100%;
-        margin-bottom: 20px;
-    }
-
-    .removeimg {
-        height: 25px;
-        position: absolute;
-        background-repeat: no-repeat;
-        top: 5px;
-        left: 5px;
-        background-size: 25px;
-        width: 25px;
-        /* border: 3px solid red; */
-        border-radius: 50%;
-
-    }
-
-    .removeimg::before {
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        content: '';
-        border: 1px solid red;
-        background: red;
-        text-align: center;
-        display: block;
-        margin-top: 11px;
-        transform: rotate(45deg);
-    }
-
-    .removeimg::after {
-        /* color: #FFF; */
-        /* background-color: #DC403B; */
-        content: '';
-        background: red;
-        border: 1px solid red;
-        text-align: center;
-        display: block;
-        transform: rotate(-45deg);
-        margin-top: -2px;
-    }
-</style>
-
 <main class="app-content">
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb">
@@ -101,49 +30,96 @@
                         @csrf
                         <div class="form-group col-md-3">
                             <label class="control-label">Tên sản phẩm</label>
-                            <input name="name" class="form-control" type="text" placeholder="Nhập tên sản phẩm" required>
+                            <input
+                                type="text"
+                                name="name"
+                                value="{{ old('name') }}"
+                                class="form-control @error('name') is-invalid @enderror"
+                                placeholder="Nhập tên sản phẩm">
+                            @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
+
+
 
                         <div class="form-group col-md-3">
                             <label class="control-label">Số lượng</label>
-                            <input name="quantity" class="form-control" type="number" min="0" placeholder="Nhập số lượng" required>
+                            <input
+                                name="quantity"
+                                type="number"
+                                min="0"
+                                value="{{ old('quantity') }}"
+                                placeholder="Nhập số lượng"
+                                class="form-control @error('quantity') is-invalid @enderror">
+                            @error('quantity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group col-md-3">
                             <label class="control-label">Giá bán</label>
-                            <input name="price" class="form-control" type="number" step="0.01" placeholder="Nhập giá bán" required>
+                            <input
+                                name="price"
+                                type="number"
+                                step="0.01"
+                                value="{{ old('price') }}"
+                                placeholder="Nhập giá bán"
+                                class="form-control @error('price') is-invalid @enderror">
+                            @error('price')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
+
 
                         <div class="form-group col-md-3">
                             <label class="control-label">Tình trạng</label>
-                            <select name="status" class="form-control" required>
+                            <select name="status" class="form-control @error('status') is-invalid @enderror">
                                 <option value="">-- Chọn tình trạng --</option>
-                                <option value="còn hàng">Còn hàng</option>
-                                <option value="hết hàng">Hết hàng</option>
+                                <option value="còn hàng" {{ old('status') == 'còn hàng' ? 'selected' : '' }}>Còn hàng</option>
+                                <option value="hết hàng" {{ old('status') == 'hết hàng' ? 'selected' : '' }}>Hết hàng</option>
                             </select>
+                            @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
                         <div class="form-group col-md-4">
                             <label class="control-label">Danh mục</label>
-                            <select name="category_id" class="form-control" required>
+                            <select name="category_id" class="form-control">
                                 <option value="">-- Chọn danh mục --</option>
                                 @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-
-
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Kích thước / Size</label>
+                            <div class="row">
+                                @foreach($sizes as $size)
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="sizes[{{ $size->id }}]" id="size{{ $size->id }}">
+                                        <label class="form-check-label" for="size{{ $size->id }}">
+                                            {{ $size->name }}
+                                        </label>
+                                        <input type="number" name="prices[{{ $size->id }}]" placeholder="Giá {{ $size->name }}" class="form-control mt-1" min="0">
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
 
                         <div class="form-group col-md-12">
                             <label class="control-label">Ảnh sản phẩm</label>
 
                             <div id="myfileupload" style="display: none;">
-                                <input type="file" id="uploadfile" name="image" accept="image/*" onchange="readURL(this);" />
+                                <input type="file" id="uploadfile" name="image" accept="image/*" onchange="readURL(this);"
+                                    class="@error('image') is-invalid @enderror" />
                             </div>
 
                             <div id="thumbbox" style="margin-top: 10px;">
-                                <img height="300" width="auto" alt="Thumb image" id="thumbimage" style="display: none; border: 1px solid #ccc; padding: 5px; border-radius: 5px;" />
+                                <img height="300" width="auto" alt="Thumb image" id="thumbimage"
+                                    style="display: none; border: 1px solid #ccc; padding: 5px; border-radius: 5px;" />
                                 <a class="removeimg" href="javascript:;" style="display:none; color:red; font-weight:bold; font-size:20px; margin-left:10px;">&times;</a>
                             </div>
 
@@ -153,8 +129,11 @@
                                 </a>
                                 <span class="filename" style="margin-left: 10px; font-style: italic; color: #666;"></span>
                             </div>
-                        </div>
 
+                            @error('image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <!-- Trong form chỉ để textarea thôi -->
                         <div class="form-group col-md-12">
                             <label class="control-label">Mô tả sản phẩm</label>
@@ -163,11 +142,8 @@
                         <div class="form-group col-md-12">
                             <button class="btn btn-primary" type="submit">Lưu lại</button>
                             <a class="btn btn-secondary" href="{{ route('products.index') }}">Hủy bỏ</a>
-
-
                         </div>
                     </form>
-
                     <script>
                         function readURL(input) {
                             if (input.files && input.files[0]) {

@@ -1,7 +1,9 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="container">
+
+
+<main class="app-content">
     <h2 class="mb-4">Tạo đơn hàng mới</h2>
 
     @if(session('error'))
@@ -10,16 +12,22 @@
 
     <form action="{{ route('admin.orders.store') }}" method="POST">
         @csrf
-
         <div class="mb-3">
             <label for="customer_name" class="form-label">Tên khách hàng</label>
-            <input type="text" name="customer_name" id="customer_name" class="form-control" required>
+            <input type="text" name="customer_name" id="customer_name" class="form-control @error('customer_name') is-invalid @enderror" value="{{ old('customer_name') }}">
+            @error('customer_name')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
             <label for="customer_phone" class="form-label">Số điện thoại (nếu có)</label>
-            <input type="text" name="customer_phone" id="customer_phone" class="form-control">
+            <input type="text" name="customer_phone" id="customer_phone" class="form-control @error('customer_phone') is-invalid @enderror" value="{{ old('customer_phone') }}">
+            @error('customer_phone')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
+
 
         <div id="product-list">
             <h5>Sản phẩm</h5>
@@ -56,7 +64,8 @@
             <button type="submit" class="btn btn-primary">Tạo đơn hàng</button>
         </div>
     </form>
-</div>
+    </div>
+</main>
 
 <script>
     let index = 1;

@@ -139,30 +139,29 @@
 
                 <div class="card-footer bg-transparent border-0 pt-0">
                     <div class="d-flex gap-2">
+                        <!-- Nút xem chi tiết -->
                         <a href="{{ route('orders.show', $order->id) }}"
                             class="btn btn-primary btn-sm flex-fill">
                             <i class="fas fa-eye me-1"></i>
                             Xem chi tiết
                         </a>
+
+                        <!-- Form hủy đơn hàng chỉ khi đang pending -->
                         @if ($order->status == 'pending')
-                        <button class="btn btn-outline-danger btn-sm"
-                            onclick="cancelOrder({{ $order->id }})">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <form action="{{ route('orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?');">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
                         @endif
                     </div>
                 </div>
+
             </div>
         </div>
         @endforeach
     </div>
-
-    <!-- Pagination -->
-    @if ($orders->hasPages())
-    <div class="d-flex justify-content-center mt-4">
-        {{ $orders->links() }}
-    </div>
-    @endif
 
     @else
     <!-- Empty State -->

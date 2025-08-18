@@ -53,6 +53,25 @@ class OrderController extends Controller
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.size_id' => 'nullable|exists:sizes,id',
             'products.*.quantity' => 'required|integer|min:1',
+        ], [
+            'customer_name.required' => 'Vui lòng nhập tên khách hàng.',
+            'customer_name.string' => 'Tên khách hàng phải là chuỗi.',
+            'customer_name.max' => 'Tên khách hàng không được vượt quá 100 ký tự.',
+
+            'customer_phone.string' => 'Số điện thoại phải là chuỗi.',
+            'customer_phone.max' => 'Số điện thoại không được vượt quá 20 ký tự.',
+
+            'products.required' => 'Vui lòng chọn sản phẩm.',
+            'products.array' => 'Dữ liệu sản phẩm không hợp lệ.',
+
+            'products.*.product_id.required' => 'Mỗi sản phẩm phải có ID.',
+            'products.*.product_id.exists' => 'Sản phẩm đã chọn không tồn tại.',
+
+            'products.*.size_id.exists' => 'Size sản phẩm đã chọn không hợp lệ.',
+
+            'products.*.quantity.required' => 'Vui lòng nhập số lượng.',
+            'products.*.quantity.integer' => 'Số lượng phải là số nguyên.',
+            'products.*.quantity.min' => 'Số lượng phải lớn hơn hoặc bằng 1.',
         ]);
 
         DB::beginTransaction();
