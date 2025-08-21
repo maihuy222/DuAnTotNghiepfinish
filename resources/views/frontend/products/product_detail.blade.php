@@ -38,6 +38,27 @@
                     <form action="{{ route('cart.add', $product->id) }}" method="POST" class="order-form">
                         @csrf
                         
+                        <!-- Đánh giá sao -->
+                        <div class="form-group">
+                            <label class="form-label">Đánh giá sản phẩm:</label>
+                            @auth
+                            <div class="star-rating" id="starRating"
+                                 data-initial-rating="{{ optional($product->reviews->firstWhere('user_id', auth()->id()))->rating ?? 0 }}">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <small class="rating-hint" id="ratingHint"></small>
+                            <input type="hidden" id="selectedRating" value="0">
+                            @else
+                            <div class="login-required">
+                                <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để đánh giá sao.</p>
+                            </div>
+                            @endauth
+                        </div>
+
                         <!-- Chọn kích cỡ -->
                         <div class="form-group">
                             <label class="form-label">Chọn kích cỡ:</label>
@@ -371,6 +392,29 @@
         box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     }
 
+    /* Star rating */
+    .star-rating {
+        display: inline-flex;
+        gap: 4px;
+        font-size: 28px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .star {
+        color: #ddd;
+        transition: color .2s ease;
+    }
+    .star.active,
+    .star.hovered {
+        color: #f5c518;
+    }
+    .rating-hint {
+        display: block;
+        margin-top: 4px;
+        color: #666;
+        font-size: .9rem;
+    }
+
     .reviews-section {
         margin-top: 3rem;
         background: white;
@@ -558,6 +602,7 @@
 @section('js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const productId = {{ $product->id }};
         // Size selection
         const sizeRadios = document.querySelectorAll('.size-radio');
         const totalPrice = document.getElementById('totalPrice');
@@ -650,6 +695,61 @@
             });
         }
 
+        // Star rating interactions and submission
+        const starContainer = document.getElementById('starRating');
+        const ratingHint = document.getElementById('ratingHint');
+        const selectedRatingInput = document.getElementById('selectedRating');
+        const ratingHints = ['Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Tuyệt vời'];
+
+        if (starContainer) {
+            const stars = Array.from(starContainer.querySelectorAll('.star'));
+            const initial = parseInt(starContainer.getAttribute('data-initial-rating') || '0');
+            let current = initial;
+
+            const paint = (val) => {
+                stars.forEach((s, idx) => {
+                    s.classList.toggle('active', idx < val);
+                });
+                if (ratingHint && val > 0) ratingHint.textContent = ratingHints[val-1];
+                if (selectedRatingInput) selectedRatingInput.value = val;
+            };
+
+            paint(current);
+
+            stars.forEach((star, idx) => {
+                star.addEventListener('mouseenter', () => {
+                    stars.forEach((s, i) => s.classList.toggle('hovered', i <= idx));
+                    if (ratingHint) ratingHint.textContent = ratingHints[idx];
+                });
+                star.addEventListener('mouseleave', () => {
+                    stars.forEach((s) => s.classList.remove('hovered'));
+                    paint(current);
+                });
+                star.addEventListener('click', () => {
+                    current = idx + 1;
+                    paint(current);
+
+                    // Gửi AJAX lưu rating ngay khi click
+                    const formData = new FormData();
+                    formData.append('rating', String(current));
+                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+                    fetch(`/product/${productId}/review`, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+                        body: formData
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (!data.success) {
+                            alert(data.message || 'Không thể lưu đánh giá, thử lại!');
+                        }
+                    })
+                    .catch(() => alert('Có lỗi xảy ra khi lưu đánh giá!'));
+                });
+            });
+        }
+
         // Review form submission
         const reviewForm = document.getElementById('commentForm');
         const reviewTextarea = document.querySelector('.review-textarea');
@@ -670,14 +770,6 @@
                 submitReviewBtn.disabled = true;
                 submitReviewBtn.textContent = 'Đang gửi...';
 
-                // Get product ID from URL - URL format: /product/{slug}
-                const pathParts = window.location.pathname.split('/');
-                const slug = pathParts[pathParts.length - 1];
-                
-                // We need to get the actual product ID, not the slug
-                // For now, let's use the product ID from the form or data attribute
-                const productId = {{ $product->id }};
-                
                 console.log('Product ID:', productId);
                 console.log('Comment content:', reviewText);
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Comment;
+use App\Models\Review;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
@@ -132,5 +133,59 @@ class Productcontroller extends Controller
                 'message' => 'Có lỗi xảy ra, vui lòng thử lại!'
             ], 500);
         }
+    }
+
+    public function addReview(Request $request, $productId)
+    {
+        // Yêu cầu đăng nhập
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vui lòng đăng nhập để đánh giá!'
+            ], 401);
+        }
+
+        // Validate rating 1-5 và content tuỳ chọn
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'content' => 'nullable|string|max:500'
+        ], [
+            'rating.required' => 'Vui lòng chọn số sao đánh giá!',
+            'rating.min' => 'Số sao tối thiểu là 1!',
+            'rating.max' => 'Số sao tối đa là 5!'
+        ]);
+
+        // Kiểm tra sản phẩm
+        $product = Product::find($productId);
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sản phẩm không tồn tại!'
+            ], 404);
+        }
+
+        // Tạo hoặc cập nhật review của user cho sản phẩm này (mỗi user 1 review)
+        $review = Review::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'product_id' => $productId,
+            ],
+            [
+                'content' => $request->input('content'),
+                'rating' => (int) $request->input('rating'),
+                'isDeleted' => 0,
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đã lưu đánh giá của bạn!',
+            'data' => [
+                'id' => $review->id,
+                'rating' => $review->rating,
+                'content' => $review->content,
+                'updated_at' => $review->updated_at->format('d/m/Y H:i')
+            ]
+        ]);
     }
 }

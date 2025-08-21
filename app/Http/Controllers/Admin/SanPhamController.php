@@ -113,7 +113,7 @@ class SanPhamController extends Controller
         }
 
 
-        return redirect()->route('admin.products.index')->with('success', 'Thêm sản phẩm thành công!');
+        return back();
     }
          function edit($id)
     {
@@ -169,13 +169,13 @@ class SanPhamController extends Controller
             $imagePath = 'uploads/products/' . $newName;
         }
         // Xóa size cũ trước khi thêm size mới
-        DB::table('product_sizes')->where('product_id', $id)->delete();
+        DB::table('productsizes')->where('product_id', $id)->delete();
 
         // Thêm size mới (giá phải hợp lệ)
         if ($request->has('sizes') && $request->has('prices')) {
             foreach ($request->sizes as $sizeId => $value) {
                 if (isset($request->prices[$sizeId]) && $request->prices[$sizeId] !== null) {
-                    DB::table('product_sizes')->insert([
+                    DB::table('productsizes')->insert([
                         'product_id' => $id,
                         'size_id' => $sizeId,
                         'price' => $request->prices[$sizeId],
@@ -188,7 +188,7 @@ class SanPhamController extends Controller
         if ($request->has('sizes') && $request->has('prices')) {
             foreach ($request->sizes as $sizeId => $value) {
                 if (isset($request->prices[$sizeId]) && $request->prices[$sizeId] !== null) {
-                    DB::table('product_sizes')->insert([
+                    DB::table('productsizes')->insert([
                         'product_id' => $id,
                         'size_id' => $sizeId,
                         'price' => $request->prices[$sizeId],

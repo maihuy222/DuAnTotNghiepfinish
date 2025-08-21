@@ -9,17 +9,24 @@
         </ul>
         <div id="clock"></div>
     </div>
-
     <div class="row">
         <div class="col-md-12">
             <div class="tile">
                 <div class="tile-body">
+                    @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
 
                     <div class="row element-button">
                         <div class="col-sm-2">
 
-                            <a class="btn btn-add btn-sm" href="form-add-nhan-vien.html" title="Thêm"><i class="fas fa-plus"></i>
-                                Tạo mới nhân viên</a>
+                            <a class="btn btn-add btn-sm" href="{{ route('admin.nguoidung.create') }}" title="Thêm"><i class="fas fa-plus"></i>
+                                Tạo mới người dùng</a>
                         </div>
                         <div class="col-sm-2">
                             <a class="btn btn-delete btn-sm nhap-tu-file" type="button" title="Nhập" onclick="myFunction(this)"><i
@@ -54,12 +61,11 @@
                                 <th width="10"><input type="checkbox" id="all"></th>
                                 <th>ID người dùng</th>
                                 <th width="150">Họ và tên</th>
-                                <th width="20">Ảnh thẻ</th>
+                                <th width="20">Ảnh</th>
                                 <th width="300">Địa chỉ</th>
                                 <th>Ngày sinh</th>
                                 <th>Giới tính</th>
                                 <th>SĐT</th>
-                                <th>Chức vụ</th>
                                 <th width="100">Tính năng</th>
                             </tr>
                         </thead>
@@ -69,12 +75,11 @@
                                 <td width="10"><input type="checkbox" name="check1" value="1"></td>
                                 <td>{{ $user -> id}}</td>
                                 <td>{{ $user -> name}}</td>
-                                <td><img class="img-card-person" src="/img-anhthe/1.jpg" alt=""></td>
+                                <td><img class=" img-card-person" src="/img-anhthe/1.jpg" alt=""></td>
                                 <td>155-157 Trần Quốc Thảo, Quận 3, Hồ Chí Minh </td>
                                 <td>12/02/1999</td>
                                 <td>Nữ</td>
                                 <td>0926737168</td>
-                                <td>Bán hàng</td>
                                 <td class="table-td-center"><button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
                                         onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
                                     </button>
@@ -84,26 +89,6 @@
                                 </td>
                             </tr>
                             @endforeach
-                            <tr>
-                                <td width="10"><input type="checkbox" name="check2" value="2"></td>
-                                <td>#SX22837</td>
-                                <td>Trần Khả Ái</td>
-                                <td><img class="img-card-person" src="/img-anhthe/2.jpg" alt=""></td>
-                                <td>6 Nguyễn Lương Bằng, Tân Phú, Quận 7, Hồ Chí Minh</td>
-                                <td>22/12/1999</td>
-                                <td>Nữ</td>
-                                <td>0931342432</td>
-                                <td>Bán hàng</td>
-                                <td><button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
-                                        onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
-                                    </button>
-                                    <button class="btn btn-primary btn-sm edit" type="button" title="Sửa" id="show-emp"
-                                        data-toggle="modal" data-target="#ModalUP"><i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                          
-
                         </tbody>
                     </table>
                 </div>
@@ -163,21 +148,6 @@
         $('#sampleTable tbody :checkbox').prop('checked', $(this).is(':checked'));
         e.stopImmediatePropagation();
     });
-
-    //EXCEL
-    // $(document).ready(function () {
-    //   $('#').DataTable({
-
-    //     dom: 'Bfrtip',
-    //     "buttons": [
-    //       'excel'
-    //     ]
-    //   });
-    // });
-
-
-    //Thời Gian
-
     //In dữ liệu
     var myApp = new function() {
         this.printTable = function() {
@@ -188,25 +158,6 @@
             win.print();
         }
     }
-    //     //Sao chép dữ liệu
-    //     var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
-
-    // copyTextareaBtn.addEventListener('click', function(event) {
-    //   var copyTextarea = document.querySelector('.js-copytextarea');
-    //   copyTextarea.focus();
-    //   copyTextarea.select();
-
-    //   try {
-    //     var successful = document.execCommand('copy');
-    //     var msg = successful ? 'successful' : 'unsuccessful';
-    //     console.log('Copying text command was ' + msg);
-    //   } catch (err) {
-    //     console.log('Oops, unable to copy');
-    //   }
-    // });
-
-
-    //Modal
     $("#show-emp").on("click", function() {
         $("#ModalUP").modal({
             backdrop: false,

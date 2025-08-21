@@ -26,28 +26,44 @@ class HomeController extends Controller
             ->where('isDeleted', 0)
             ->get();
 
-        $latestProducts = DB::table('products') // sản phẩm mới nhất
-            ->where('isDeleted', 0)
-            ->orderByDesc('created_at')
+        $latestProducts = Product::select(
+                'products.id', 'products.name', 'products.slug', 'products.price', 'products.image',
+                DB::raw('AVG(reviews.rating) as avg_rating'),
+                DB::raw('COUNT(DISTINCT reviews.id) as reviews_count')
+            )
+            ->leftJoin('reviews', function($join) {
+                $join->on('products.id', '=', 'reviews.product_id')
+                     ->where('reviews.isDeleted', '=', 0);
+            })
+            ->where('products.isDeleted', 0)
+            ->groupBy('products.id', 'products.name', 'products.slug', 'products.price', 'products.image')
+            ->orderByDesc('products.created_at')
             ->limit(5)
             ->get();
 
-        // Best selling products
+        // Best selling products (kèm trung bình sao)
         $bestSelling = Product::select(
             'products.id',
             'products.name',
             'products.slug',
             'products.price',
             'products.image',
-            DB::raw('SUM(orderdetails.quantity) as total_sold')
+            DB::raw('SUM(orderdetails.quantity) as total_sold'),
+            DB::raw('AVG(reviews.rating) as avg_rating'),
+            DB::raw('COUNT(DISTINCT reviews.id) as reviews_count')
         )
         ->join('orderdetails', 'products.id', '=', 'orderdetails.product_id')
+        ->leftJoin('reviews', function($join) {
+            $join->on('products.id', '=', 'reviews.product_id')
+                 ->where('reviews.isDeleted', '=', 0);
+        })
         ->groupBy('products.id', 'products.name', 'products.slug', 'products.price', 'products.image')
         ->orderByDesc('total_sold')
+        ->orderByDesc('avg_rating')
         ->take(5)
         ->get();
 
-        // Featured products
+        // Featured products (kèm trung bình sao)
         $featuredProducts = Product::select(
             'products.id',
             'products.name',
@@ -55,14 +71,17 @@ class HomeController extends Controller
             'products.price',
             'products.image',
             DB::raw('SUM(orderdetails.quantity) as total_sold'),
-            DB::raw('AVG(reviews.rating) as average_rating')
+            DB::raw('AVG(reviews.rating) as avg_rating')
         )
         ->leftJoin('orderdetails', 'products.id', '=', 'orderdetails.product_id')
-        ->leftJoin('reviews', 'products.id', '=', 'reviews.product_id')
+        ->leftJoin('reviews', function($join) {
+            $join->on('products.id', '=', 'reviews.product_id')
+                 ->where('reviews.isDeleted', '=', 0);
+        })
         ->where('products.isDeleted', 0)
         ->groupBy('products.id', 'products.name', 'products.slug', 'products.price', 'products.image')
         ->orderByDesc('total_sold')
-        ->orderByDesc('average_rating')
+        ->orderByDesc('avg_rating')
         ->orderByDesc('products.updated_at')
         ->take(5)
         ->get();
@@ -78,7 +97,10 @@ class HomeController extends Controller
             DB::raw('AVG(reviews.rating) as avg_rating')
         )
         ->leftJoin('orderdetails', 'products.id', '=', 'orderdetails.product_id')
-        ->leftJoin('reviews', 'products.id', '=', 'reviews.product_id')
+        ->leftJoin('reviews', function($join) {
+            $join->on('products.id', '=', 'reviews.product_id')
+                 ->where('reviews.isDeleted', '=', 0);
+        })
         ->where('products.isDeleted', 0)
         ->groupBy('products.id', 'products.name', 'products.slug', 'products.price', 'products.image')
         ->orderByDesc('order_count')
