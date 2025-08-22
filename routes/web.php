@@ -23,7 +23,7 @@ use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\thuocTinhController;
 use App\Http\Controllers\frontend\ProfileController;
 use App\Http\Controllers\frontend\FavoriteController;
-
+use App\Http\Controllers\frontend\ContactController;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/home', [HomeController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('home');
@@ -169,14 +169,12 @@ route::get('/admin/edit/{id}', [thuocTinhController::class, 'edit'])->name('admi
 Route::put('/admin/update/{id}', [thuocTinhController::class, 'update'])->name('admin.thuoctinh.update');
 Route::delete('/admin/delete/{id}', [thuocTinhController::class, 'destroy'])->name('admin.thuoctinh.delete');
 Route::get('/admin/deleteall', [thuocTinhController::class, 'destroyAll'])->name('admin.thuoctinh.deleteAll');
+// Trang About
+Route::get('/about', function () {
+    return view('frontend.about.index');
+})->name('about');
 
 
-
-
-
-
-
-
-
-
+Route::get('/contact', [ContactController::class, 'index'])->name('frontend.contact.index');
+Route::post('/contact', [ContactController::class, 'store'])->name('frontend.contact.store');
 require __DIR__ . '/auth.php';
