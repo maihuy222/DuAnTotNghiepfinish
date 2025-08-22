@@ -1,0 +1,172 @@
+@extends('frontend.layout')
+@section('content')
+
+
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@endsection
+
+
+    <div class="container">
+        <div class="main">
+            <img src="{{ asset('frontend/assets/img/login.png') }}" alt="Food Image">
+
+            <div class="login-box">
+                <h2>Register</h2>
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name" value="{{ old('name') }}" required>
+                    <x-input-error :messages="$errors->get('name')" class="text-red-500 text-sm" />
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="abc@gmail.com" value="{{ old('email') }}" required>
+                    <x-input-error :messages="$errors->get('email')" class="text-red-500 text-sm" />
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <x-input-error :messages="$errors->get('password')" class="text-red-500 text-sm" />
+
+                    <label for="password_confirmation">Confirm Password</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                    <x-input-error :messages="$errors->get('password_confirmation')" class="text-red-500 text-sm" />
+
+                    <button class="login-btn" type="submit">Register</button>
+                </form>
+
+    
+
+                <div class="register">
+                    Already have an account?
+                    <a href="{{ route('login') }}">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    .close {
+        position: absolute;
+        right: 40px;
+        font-size: 32px;
+        color: #ea580c;
+        /* ✅ Chữ X màu cam nổi bật */
+        cursor: pointer;
+    }
+
+    .main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px;
+    }
+
+    .main img {
+        max-width: 45%;
+        border-radius: 12px;
+    }
+
+    .login-box {
+        background-color: #f3f4f6;
+        /* ✅ Box login nền xám sáng */
+        padding: 40px;
+        border-radius: 20px;
+        width: 500px;
+    }
+
+    .login-box h2 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #111;
+        /* ✅ Tiêu đề màu đen */
+    }
+
+    .login-box label {
+        display: block;
+        margin: 15px 0 5px;
+        font-size: 18px;
+        color: #111;
+        /* ✅ Label màu đen */
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        background-color: #fff;
+        color: #111;
+    }
+
+    .forgot {
+        text-align: right;
+        margin-bottom: 20px;
+        color: #555;
+        /* ✅ Màu chữ nhạt hơn */
+        font-size: 14px;
+    }
+
+    .login-btn {
+        width: 100%;
+        background-color: #ea580c;
+        padding: 14px 0;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+    }
+
+    .social-login {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .social-login span {
+        display: block;
+        margin-bottom: 15px;
+        color: #555;
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .social-icons div {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .social-icons img {
+        width: 60%;
+        height: auto;
+    }
+
+    .register {
+        margin-top: 20px;
+        text-align: center;
+        color: #555;
+    }
+
+    .register a {
+        color: #ea580c;
+        font-weight: bold;
+        text-decoration: underline;
+        margin-left: 5px;
+    }
+</style>
+
+@endsection

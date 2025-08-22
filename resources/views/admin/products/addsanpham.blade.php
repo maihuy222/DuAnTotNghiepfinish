@@ -1,0 +1,285 @@
+@extends('admin.layout')
+@section('content')
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item">Danh sách sản phẩm</li>
+            <li class="breadcrumb-item"><a href="">Thêm sản phẩm</a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <h3 class="tile-title">Tạo mới sản phẩm</h3>
+                <div class="tile-body">
+                    <div class="row element-button">
+                        <div class="col-sm-2">
+                            <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#exampleModalCenter"><i
+                                    class="fas fa-folder-plus"></i> Thêm nhà cung cấp</a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#adddanhmuc"><i
+                                    class="fas fa-folder-plus"></i> Thêm danh mục</a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addtinhtrang"><i
+                                    class="fas fa-folder-plus"></i> Thêm tình trạng</a>
+                        </div>
+                    </div>
+                    <form class="row" method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Tên sản phẩm</label>
+                            <input
+                                type="text"
+                                name="name"
+                                value="{{ old('name') }}"
+                                class="form-control @error('name') is-invalid @enderror"
+                                placeholder="Nhập tên sản phẩm">
+                            @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Số lượng</label>
+                            <input
+                                name="quantity"
+                                type="number"
+                                min="0"
+                                value="{{ old('quantity') }}"
+                                placeholder="Nhập số lượng"
+                                class="form-control @error('quantity') is-invalid @enderror">
+                            @error('quantity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Giá bán</label>
+                            <input
+                                name="price"
+                                type="number"
+                                step="0.01"
+                                value="{{ old('price') }}"
+                                placeholder="Nhập giá bán"
+                                class="form-control @error('price') is-invalid @enderror">
+                            @error('price')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Tình trạng</label>
+                            <select name="status" class="form-control @error('status') is-invalid @enderror">
+                                <option value="">-- Chọn tình trạng --</option>
+                                <option value="còn hàng" {{ old('status') == 'còn hàng' ? 'selected' : '' }}>Còn hàng</option>
+                                <option value="hết hàng" {{ old('status') == 'hết hàng' ? 'selected' : '' }}>Hết hàng</option>
+                            </select>
+                            @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Danh mục</label>
+                            <select name="category_id" class="form-control">
+                                <option value="">-- Chọn danh mục --</option>
+                                @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Kích thước / Size</label>
+                            <div class="row">
+                                @foreach($sizes as $size)
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="sizes[{{ $size->id }}]" id="size{{ $size->id }}">
+                                        <label class="form-check-label" for="size{{ $size->id }}">
+                                            {{ $size->name }}
+                                        </label>
+                                        <input type="number" name="prices[{{ $size->id }}]" placeholder="Giá {{ $size->name }}" class="form-control mt-1" min="0">
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Ảnh sản phẩm</label>
+
+                            <div id="myfileupload" style="display: none;">
+                                <input type="file" id="uploadfile" name="image" accept="image/*" onchange="readURL(this);"
+                                    class="@error('image') is-invalid @enderror" />
+                            </div>
+
+                            <div id="thumbbox" style="margin-top: 10px;">
+                                <img height="300" width="auto" alt="Thumb image" id="thumbimage"
+                                    style="display: none; border: 1px solid #ccc; padding: 5px; border-radius: 5px;" />
+                                <a class="removeimg" href="javascript:;" style="display:none; color:red; font-weight:bold; font-size:20px; margin-left:10px;">&times;</a>
+                            </div>
+
+                            <div id="boxchoice" style="margin-top: 10px;">
+                                <a href="javascript:;" class="Choicefile btn btn-outline-primary">
+                                    <i class="fas fa-cloud-upload-alt"></i> Chọn ảnh
+                                </a>
+                                <span class="filename" style="margin-left: 10px; font-style: italic; color: #666;"></span>
+                            </div>
+
+                            @error('image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <!-- Trong form chỉ để textarea thôi -->
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Mô tả sản phẩm</label>
+                            <textarea class="form-control" name="description" id="mota" rows="6" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <button class="btn btn-primary" type="submit">Lưu lại</button>
+                            <a class="btn btn-secondary" href="{{ route('products.index') }}">Hủy bỏ</a>
+                        </div>
+                    </form>
+                    <script>
+                        function readURL(input) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
+                                reader.onload = function(e) {
+                                    $('#thumbimage').attr('src', e.target.result).show();
+                                }
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+                    </script>
+
+</main>
+<!-- Modal Thêm Danh Mục -->
+<div class="modal fade" id="adddanhmuc" tabindex="-1" role="dialog" aria-labelledby="addDanhMucLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('categories.store') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDanhMucLabel">Thêm mới danh mục</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Nhập tên danh mục mới</label>
+                        <input class="form-control" name="name" type="text" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Danh mục hiện có</label>
+                        <ul>
+                            @foreach ($categories as $cat)
+                            <li>{{ $cat->name }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Lưu lại</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--
+MODAL
+-->
+
+
+
+
+<!--
+  MODAL TÌNH TRẠNG
+-->
+<div class="modal fade" id="addtinhtrang" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group  col-md-12">
+                        <span class="thong-tin-thanh-toan">
+                            <h5>Thêm mới tình trạng</h5>
+                        </span>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="control-label">Nhập tình trạng mới</label>
+                        <input class="form-control" type="text" required>
+                    </div>
+                </div>
+                <BR>
+                <button class="btn btn-save" type="button">Lưu lại</button>
+                <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+                <BR>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<!--
+MODAL
+-->
+
+
+
+<!-- Thư viện jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Thư viện CKEditor -->
+<script src="https://cdn.ckeditor.com/4.20.2/standard/ckeditor.js"></script>
+
+<script>
+    // ======== Khởi tạo CKEditor cho phần mô tả sản phẩm ========
+    CKEDITOR.replace('mota', {
+        height: 300,
+        toolbarCanCollapse: true
+    });
+
+    // ======== Xử lý upload ảnh, xem trước và xóa ========
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $("#thumbimage").attr('src', e.target.result).show();
+            };
+            reader.readAsDataURL(input.files[0]);
+            $('.filename').text(input.files[0].name);
+            $(".removeimg").show();
+        }
+    }
+
+    $(document).ready(function() {
+        $(".Choicefile").on('click', function() {
+            $("#uploadfile").click();
+        });
+
+        $(".removeimg").on('click', function() {
+            $("#thumbimage").attr('src', '').hide();
+            $("#uploadfile").val(''); // Reset input file
+            $(".filename").text('');
+            $(this).hide();
+        });
+    });
+</script>
+
+
+
+
+@endsection
