@@ -6,10 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Str;
 
 class SanPhamController extends Controller
 {
+   public function trash()
+{
+    $products = Product::where('isDeleted',1)->get();
+
+    return view('admin.products.trash', compact('products'));
+}
     function index()
     {
         $products = DB::table('products')
@@ -265,7 +272,7 @@ class SanPhamController extends Controller
         // Xóa vĩnh viễn khỏi database
         DB::table('products')->where('id', $id)->delete();
 
-        return redirect()->route('products.index')->with('success', 'Xóa vĩnh viễn sản phẩm thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Xóa vĩnh viễn sản phẩm thành công!');
     }
 }
 

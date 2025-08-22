@@ -77,6 +77,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 Route::prefix('admin/products')->group(function () {
     Route::get('/', [SanPhamController::class, 'index'])->name('admin.products.index'); // Danh sách
+    Route::get('/trash', [SanPhamController::class, 'trash'])->name('products.trash');  
     Route::get('/create', [SanPhamController::class, 'create'])->name('products.create'); // Form thêm mới
     Route::post('/store', [SanPhamController::class, 'store'])->name('products.store'); // Lưu mới
     Route::get('/{id}/edit', [SanPhamController::class, 'edit'])->name('products.edit'); // Form sửa
@@ -85,6 +86,7 @@ Route::prefix('admin/products')->group(function () {
     Route::put('/{id}/restore', [SanPhamController::class, 'restore'])->name('products.restore'); // Khôi phục
     Route::delete('/{id}/force', [SanPhamController::class, 'forceDelete'])->name('products.forceDelete'); // Xóa vĩnh viễn
 });
+
 Route::prefix('admin/categories')->name('categories.')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('index');
     Route::get('/create', [CategoryController::class, 'create'])->name('create');

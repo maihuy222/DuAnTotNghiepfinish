@@ -75,16 +75,25 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                    <form action="{{ route('products.forceDelete', $product->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-danger btn-sm" type="submit" title="Xóa">
+                                        <button class="btn btn-danger btn-sm" type="submit" title="Xóa vĩnh viễn">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
-                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa nâng cao">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                 <form action="{{ route('products.restore', ['id' => $product->id]) }}" 
+                                                method="POST" 
+                                                style="display:inline-block;" 
+                                                onsubmit="return confirm('Bạn có muốn khôi phục sản phẩm này không ?')">
+                                                @csrf
+                                                @method('PUT')
+                                                <button class="btn btn-success btn-sm" type="submit" title="Khôi phục">
+                                                    <i class="fas fa-undo"></i>
+                                                </button>
+                                            </form>
+
+                                   
                                 </td>
                             </tr>
                             @endforeach

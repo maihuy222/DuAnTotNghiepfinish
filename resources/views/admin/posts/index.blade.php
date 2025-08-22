@@ -21,27 +21,9 @@
                             <a class="btn btn-add btn-sm" href="{{ route('posts.create') }}" title="Thêm"><i class="fas fa-plus"></i>
                                 Tạo mới bài viết</a>
                         </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm nhap-tu-file" type="button" title="Nhập" onclick="myFunction(this)"><i
-                                    class="fas fa-file-upload"></i> Tải từ file</a>
-                        </div>
+                        
 
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm print-file" type="button" title="In" onclick="myApp.printTable()"><i
-                                    class="fas fa-print"></i> In dữ liệu</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm print-file js-textareacopybtn" type="button" title="Sao chép"><i
-                                    class="fas fa-copy"></i> Sao chép</a>
-                        </div>
-
-                        <div class="col-sm-2">
-                            <a class="btn btn-excel btn-sm" href="" title="In"><i class="fas fa-file-excel"></i> Xuất Excel</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm pdf-file" type="button" title="In" onclick="myFunction(this)"><i
-                                    class="fas fa-file-pdf"></i> Xuất PDF</a>
-                        </div>
+                        
                         <div class="col-sm-2">
                             <a class="btn btn-delete btn-sm" type="button" title="Xóa" onclick="myFunction(this)"><i
                                     class="fas fa-trash-alt"></i> Xóa tất cả </a>
@@ -58,8 +40,8 @@
                                 <th width="300">Nội dung</th>
                                 <th>Ngày tạo</th>
                                 <th>loại</th>
-                                <th>Ngày Đăng</th>
-                                <th>Ngày Đăng</th>
+                    
+                                
 
                                 <th width="100">Tính năng</th>
                             </tr>
@@ -77,11 +59,12 @@
                                     <span>Không có ảnh</span>
                                     @endif
                                 </td>
-                                <td>{{ $posts -> content}}</td>
-                                <td>12/02/1999</td>
+                               <td>{!! $posts->content !!}</td>
+
+                                 <td>{{ \Carbon\Carbon::parse($posts->created_at)->format('d/m/Y') }}</td>
                                 <td>{{ $posts->postcategory->name }}</td>
-                                <td>0926737168</td>
-                                <td>Bán hàng</td>
+                             
+                        
                                 <td class="table-td-center">
                                     <a href="{{ route('posts.edit', $posts->id) }}" class="btn btn-warning btn-sm" title="Sửa">
                                         <i class="fas fa-edit"></i>

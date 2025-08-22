@@ -172,6 +172,7 @@
     <!--===============================================================================================-->
     <script type="text/javascript" src="{{ asset('admin/assets/js/plugins/chart.js') }}"></script>
     <!--===============================================================================================-->
+    
     <script type="text/javascript">
         var data = {
             labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"],
