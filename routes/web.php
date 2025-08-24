@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\thuocTinhController;
 use App\Http\Controllers\frontend\ProfileController;
 use App\Http\Controllers\frontend\FavoriteController;
 use App\Http\Controllers\frontend\ContactController;
+
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/home', [HomeController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('home');
@@ -180,3 +181,6 @@ Route::get('/about', function () {
 Route::get('/contact', [ContactController::class, 'index'])->name('frontend.contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('frontend.contact.store');
 require __DIR__ . '/auth.php';
+Route::get('/menu', function () {
+    return view('menu'); // resources/views/menu.blade.php
+})->name('menu');

@@ -1,45 +1,55 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-=======
+    <title>@yield('title', config('app.name', 'TakeXX'))</title>
 
->>>>>>> d6605182031a463ac192bde821426eb6b5722c0b
-=======
+    {{-- Bootstrap 5 --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   
+    {{-- Fonts --}}
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
->>>>>>> d6605182031a463ac192bde821426eb6b5722c0b
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    {{-- App CSS & JS --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+    {{-- Custom style cho toàn site (nếu cần) --}}
+    @stack('styles')
+</head>
+<body class="font-sans bg-light">
+    <div id="app" class="min-h-screen d-flex flex-column">
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+        {{-- Navbar chung --}}
+        @include('frontend.header')
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+        {{-- Header (tùy page) --}}
+        @hasSection('header')
+            <header class="bg-white shadow-sm py-3 mb-4">
+                <div class="container">
+                    @yield('header')
+                </div>
+            </header>
+        @endif
+
+        {{-- Nội dung chính --}}
+        <main class="flex-fill">
+            <div class="container py-4">
+                @yield('content')
+            </div>
+        </main>
+
+        {{-- Footer chung --}}
+        @include('frontend.footer')
+    </div>
+
+    {{-- Bootstrap JS (bắt buộc nếu dùng collapse, modal...) --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- Script riêng cho từng page --}}
+    @stack('scripts')
+</body>
 </html>

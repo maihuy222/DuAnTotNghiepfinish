@@ -638,4 +638,22 @@ h1,h2,h3,h4,h5,h6 {
     height: 740px;
   }
 }
+.hotline-btn {
+    background-color: #ff6600;   /* màu nền cam */
+    color: #fff;                 /* chữ trắng */
+    border: none;                /* bỏ viền mặc định */
+    border-radius: 12px;         /* bo góc */
+    padding: 12px 24px;          /* padding */
+    font-size: 18px;
+    display: inline-flex;        /* giữ chữ không dịch */
+    align-items: center;         /* canh chữ giữa nút */
+    gap: 8px;                    /* khoảng cách giữa icon và chữ */
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.hotline-btn:hover {
+    background-color: #ff8533;
+    transform: scale(1.05);      /* phóng to nhẹ */
+}
 
