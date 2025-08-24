@@ -130,8 +130,10 @@ Route::prefix('admin')->middleware('admin.auth')->group(function () {
     Route::get('/orders/create', [AdminOrderController::class, 'create'])->name('admin.orders.create');
     Route::post('orders/store', [AdminOrderController::class, 'store'])->name('admin.orders.store');
     Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
-    Route::post('/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    Route::put('/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::get('/orders/{id}/reorder', [AdminOrderController::class, 'reorder'])->name('orders.reorder');
+    Route::delete('admin/orders/{id}', [AdminOrderController::class, 'destroy'])->name('admin.orders.destroy');
+
 });
 
 Route::prefix('admin')->middleware(['admin.auth'])->group(function () {

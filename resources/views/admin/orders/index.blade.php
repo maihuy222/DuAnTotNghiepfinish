@@ -23,31 +23,7 @@
                             </a>
 
                         </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm nhap-tu-file" type="button" title="Nhập" onclick="myFunction(this)"><i
-                                    class="fas fa-file-upload"></i> Tải từ file</a>
-                        </div>
-
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm print-file" type="button" title="In" onclick="myApp.printTable()"><i
-                                    class="fas fa-print"></i> In dữ liệu</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm print-file js-textareacopybtn" type="button" title="Sao chép"><i
-                                    class="fas fa-copy"></i> Sao chép</a>
-                        </div>
-
-                        <div class="col-sm-2">
-                            <a class="btn btn-excel btn-sm" href="" title="In"><i class="fas fa-file-excel"></i> Xuất Excel</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm pdf-file" type="button" title="In" onclick="myFunction(this)"><i
-                                    class="fas fa-file-pdf"></i> Xuất PDF</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-delete btn-sm" type="button" title="Xóa" onclick="myFunction(this)"><i
-                                    class="fas fa-trash-alt"></i> Xóa tất cả </a>
-                        </div>
+                        
                     </div>
                     <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
                         id="sampleTable">
@@ -57,9 +33,10 @@
                                 <th>ID Đơn hàng </th>
                                 <th width="150">Khách hàng</th>
                                 <th width="20">Ngày đặt</th>
-                                <th width="300">Trạng Thái</th>
-                                <th>Tổng tiền</th>
+                                <th width="300">Trạng Thái</th>                                                    
                                 <th>Thanh toán</th>
+                               
+                              <th>Tổng tiền</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -70,12 +47,39 @@
                                 <td>{{ $order -> id}}</td>
                                 <td>{{ $order->user->name ?? 'N/A' }}</td>
                                 <td>{{ $order->order_date ?? $order->created_at->format('d/m/Y H:i') }}</td>
-                                <td>{{ ucfirst($order->status) }}</td>
+                                 @php
+                                        $statusText = [
+                                            'pending'    => 'Chờ xử lý',
+                                            'paid'       => 'Đã thanh toán',
+                                            'processing' => 'Chuẩn bị hàng',
+                                            'shipping'   => 'Đang giao hàng',
+                                            'delivered'  => 'Đã giao',
+                                            'completed'  => 'Hoàn thành',
+                                            'cancelled'  => 'Đã hủy',
+                                        ];
+                                    @endphp
+                               <td>{{ $statusText[$order->status] ?? $order->status }}</td>
+                                <td>{{ $order->payment->method ?? '---' }}</td>                            
                                 <td>{{ number_format($order->total_amount, 0, ',', '.') }} đ</td>
-                                <td>{{ $order->payment->method ?? '---' }}</td>
-                                <td>
-                                    <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-primary">Chi tiết</a>
-                                </td>
+                                
+                               <td width="10"class="d-flex align-items-center gap-2">
+    {{-- Nút Chi tiết --}}
+    <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-primary">
+        <i class="fas fa-eye"></i> Chi tiết
+    </a>
+
+    {{-- Nút Xóa --}}
+    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST"
+          onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này không?');"
+          style="display:inline-block;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-danger">
+            <i class="fas fa-trash"></i> Xóa
+        </button>
+    </form>
+</td>
+
                             </tr>
                             @endforeach
 

@@ -3,7 +3,7 @@
      
 
         .footer-demo {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #000000ff 0%, #3e3c3cff 100%);
             color: white;
             position: relative;
             overflow: hidden;
@@ -101,7 +101,7 @@
         }
 
         .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: rgba(0, 0, 0, 0.8) !important;
             text-decoration: none !important;
             transition: all 0.3s ease;
             padding: 0.3rem 0;
@@ -122,7 +122,7 @@
         }
 
         .nav-link:hover {
-            color: #ffffff !important;
+            color: #000000ff !important;
             transform: translateX(5px);
         }
 

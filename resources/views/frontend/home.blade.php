@@ -173,30 +173,35 @@
                                                 </a>
                                             </h6>
 
-                                            <div class="d-flex align-items-center mb-2 rating-section">
+                                                    <div class="d-flex align-items-center mb-2 rating-section">
                                                 @php
                                                     $avg = round(($product->avg_rating ?? 0), 1);
                                                     $full = floor($avg);
                                                     $hasHalf = ($avg - $full) >= 0.5;
                                                 @endphp
-                                                <div class="text-warning small">
+                                                <div class="small" style="color: #FFD700;"> <!-- vàng đậm -->
                                                     @for ($i = 1; $i <= 5; $i++)
                                                         @if ($i <= $full)
-                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star fa-xs"></i>
                                                         @elseif ($i == $full + 1 && $hasHalf)
-                                                            <i class="fas fa-star-half-alt"></i>
+                                                            <i class="fas fa-star-half-alt fa-xs"></i>
                                                         @else
-                                                            <i class="far fa-star"></i>
+                                                            <i class="far fa-star fa-xs"></i>
                                                         @endif
                                                     @endfor
                                                 </div>
-                                                <span class="text-muted small ms-1">({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} đánh giá)</span>
+                                                <span class="small ms-1" style="color: #FFD700;">
+                                                    ({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} )
+                                                </span>
                                             </div>
 
+
+
                                             <div class="price-section">
-                                                <span class="h6 text-danger fw-bold mb-0">
-                                                    {{ number_format($product->price, 0, ',', '.') }}₫
-                                                </span>
+                                                <span style="font-weight: 800; color: #b20000; font-size: 0.8rem;">
+                                        {{ number_format($product->price, 0, ',', '.') }}₫
+                                    </span>
+
                                                 @if(isset($product->original_price) && $product->original_price > $product->price)
                                                 <div class="text-muted small text-decoration-line-through">
                                                     {{ number_format($product->original_price, 0, ',', '.') }}₫
@@ -348,29 +353,32 @@
                                 </h6>
 
                                 {{-- Đánh giá --}}
-                                <div class="d-flex align-items-center mb-2 rating-section">
-                                    @php
-                                        $avg = round(($product->avg_rating ?? 0), 1);
-                                        $full = floor($avg);
-                                        $hasHalf = ($avg - $full) >= 0.5;
-                                    @endphp
-                                    <div class="text-warning small">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= $full)
-                                                <i class="fas fa-star"></i>
-                                            @elseif ($i == $full + 1 && $hasHalf)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @else
-                                                <i class="far fa-star"></i>
-                                            @endif
-                                        @endfor
-                                    </div>
-                                    <span class="text-muted small ms-1">({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} đánh giá)</span>
-                                </div>
+                                  <div class="d-flex align-items-center mb-2 rating-section">
+                                                @php
+                                                    $avg = round(($product->avg_rating ?? 0), 1);
+                                                    $full = floor($avg);
+                                                    $hasHalf = ($avg - $full) >= 0.5;
+                                                @endphp
+                                                <div class="small" style="color: #FFD700;"> <!-- vàng đậm -->
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $full)
+                                                            <i class="fas fa-star fa-xs"></i>
+                                                        @elseif ($i == $full + 1 && $hasHalf)
+                                                            <i class="fas fa-star-half-alt fa-xs"></i>
+                                                        @else
+                                                            <i class="far fa-star fa-xs"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <span class="small ms-1" style="color: #FFD700;">
+                                                    ({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} )
+                                                </span>
+                                            </div>
+
 
                                 {{-- Giá --}}
                                 <div class="price-section">
-                                    <span style="font-weight: 900; color: #b20000; font-size: 1.2rem;">
+                                    <span style="font-weight: 800; color: #b20000; font-size: 0.8rem;">
                                         {{ number_format($product->price, 0, ',', '.') }}₫
                                     </span>
 
@@ -503,36 +511,39 @@
                                         </a>
                                     </h6>
 
-                                    <div class="d-flex align-items-center mb-2 rating-section">
-                                        @php
-                                            $avg = round(($product->avg_rating ?? 0), 1);
-                                            $full = floor($avg);
-                                            $hasHalf = ($avg - $full) >= 0.5;
-                                        @endphp
-                                        <div class="text-warning small">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= $full)
-                                                    <i class="fas fa-star"></i>
-                                                @elseif ($i == $full + 1 && $hasHalf)
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                @else
-                                                    <i class="far fa-star"></i>
-                                                @endif
-                                            @endfor
-                                        </div>
-                                        <span class="text-muted small ms-1">({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} đánh giá)</span>
-                                    </div>
+                                   <div class="d-flex align-items-center mb-2 rating-section">
+                                                @php
+                                                    $avg = round(($product->avg_rating ?? 0), 1);
+                                                    $full = floor($avg);
+                                                    $hasHalf = ($avg - $full) >= 0.5;
+                                                @endphp
+                                                <div class="small" style="color: #FFD700;"> <!-- vàng đậm -->
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $full)
+                                                            <i class="fas fa-star fa-xs"></i>
+                                                        @elseif ($i == $full + 1 && $hasHalf)
+                                                            <i class="fas fa-star-half-alt fa-xs"></i>
+                                                        @else
+                                                            <i class="far fa-star fa-xs"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <span class="small ms-1" style="color: #FFD700;">
+                                                    ({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} )
+                                                </span>
+                                            </div>
 
-                                    <div class="price-section">
-                                        <span class="h6 text-danger fw-bold mb-0">
-                                            {{ number_format($product->price, 0, ',', '.') }}₫
-                                        </span>
-                                        @if(isset($product->original_price) && $product->original_price > $product->price)
-                                        <div class="text-muted small text-decoration-line-through">
-                                            {{ number_format($product->original_price, 0, ',', '.') }}₫
-                                        </div>
-                                        @endif
+                                 <div class="price-section">
+                                    <span style="font-weight: 800; color: #ec1313ff; font-size: 0.8rem;">
+                                        {{ number_format($product->price, 0, ',', '.') }}₫
+                                    </span>
+
+                                    @if(isset($product->original_price) && $product->original_price > $product->price)
+                                    <div class="text-muted small text-decoration-line-through">
+                                        {{ number_format($product->original_price, 0, ',', '.') }}₫
                                     </div>
+                                    @endif
+                                </div>
 
                                     <form action="{{ route('cart.add', $product->id) }}" method="POST">
                                         @csrf
@@ -613,28 +624,43 @@
                                             {{ $product->name }}
                                         </a>
                                     </h6>
+                              
 
-                                    <div class="d-flex align-items-center mb-2 rating-section">
-                                        <div class="text-warning small">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <span class="text-muted small ms-1">(4.5)</span>
-                                    </div>
+                                   <div class="d-flex align-items-center mb-2 rating-section">
+                                                @php
+                                                    $avg = round(($product->avg_rating ?? 0), 1);
+                                                    $full = floor($avg);
+                                                    $hasHalf = ($avg - $full) >= 0.5;
+                                                @endphp
+                                                <div class="small" style="color: #FFD700;"> <!-- vàng đậm -->
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $full)
+                                                            <i class="fas fa-star fa-xs"></i>
+                                                        @elseif ($i == $full + 1 && $hasHalf)
+                                                            <i class="fas fa-star-half-alt fa-xs"></i>
+                                                        @else
+                                                            <i class="far fa-star fa-xs"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <span class="small ms-1" style="color: #FFD700;">
+                                                    ({{ number_format($avg, 1) }}/5 · {{ (int) ($product->reviews_count ?? 0) }} )
+                                                </span>
+                                            </div>
 
-                                    <div class="price-section">
-                                        <span class="h6 text-danger fw-bold mb-0">
-                                            {{ number_format($product->price, 0, ',', '.') }}₫
-                                        </span>
-                                        @if(isset($product->original_price) && $product->original_price > $product->price)
-                                        <div class="text-muted small text-decoration-line-through">
-                                            {{ number_format($product->original_price, 0, ',', '.') }}₫
-                                        </div>
-                                        @endif
+
+                                {{-- Giá --}}
+                                <div class="price-section">
+                                    <span style="font-weight: 800; color: #b20000; font-size: 0.8rem;">
+                                        {{ number_format($product->price, 0, ',', '.') }}₫
+                                    </span>
+
+                                    @if(isset($product->original_price) && $product->original_price > $product->price)
+                                    <div class="text-muted small text-decoration-line-through">
+                                        {{ number_format($product->original_price, 0, ',', '.') }}₫
                                     </div>
+                                    @endif
+                                </div>
 
                                     <form action="{{ route('cart.add', $product->id) }}" method="POST">
                                         @csrf
@@ -676,20 +702,22 @@
         <div class="blog-grid">
             @foreach($posts as $post)
             <article class="blog-card" data-category="{{ $post->category_id }}">
-                <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="blog-image">
+                <a  href="{{ route('blog.show', $post->id) }}">
+                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="blog-image">
+                </a>
                 <div class="blog-content">
-                    <span class="blog-category">{{ $post->postcategory->name }}</span>
-                    <h2 class="blog-title">{{ $post->title }}</h2>
+                    <a href="{{ route('blog.show', $post->id) }}"><span class="blog-category">{{ $post->postcategory->name }}</span></a>
+                        <a href="{{ route('blog.show', $post->id) }}" style="text-decoration:none; color:inherit;">
+                        <h2 class="blog-title">{{ $post->title }}</h2>
+                    </a>
+
                     <p class="blog-excerpt">
                         {!! \Illuminate\Support\Str::limit($post->content, 100) !!}
 
                     </p>
 
                     <div class="blog-meta">
-                        <div class="author-info">
-                            <div class="author-avatar">{{ mb_substr($post->author_name, 0, 1) }}</div>
-                            <span>{{ $post->author_name }}</span>
-                        </div>
+                       
                         <span class="date">{{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</span>
                     </div>
                     <a href="{{ route('blog.show', $post->id) }}" class="read-more">Đọc tiếp</a>

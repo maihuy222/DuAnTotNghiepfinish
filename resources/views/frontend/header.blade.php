@@ -171,7 +171,7 @@
 
                         <!-- More Categories Dropdown -->
                         <div class="more-categories">
-                            <select class="form-select border-0 bg-transparent text-white"
+                            <select class="form-select border-0 bg-transparent text-black"
                                 onchange="if (this.value) window.location.href = '/category/' + this.value;">
                                 <option selected disabled>Xem thêm danh mục</option>
                                 @foreach ($otherCategories as $category)
