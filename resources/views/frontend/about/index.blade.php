@@ -182,8 +182,8 @@
                     <div class="card border-0 shadow-sm h-100 text-center">
                         <div class="card-body">
                             <div class="fs-1 mb-3">{{ $specialty['icon'] }}</div>
-                            <h5 class="fw-bold">{{ $specialty['title'] }}</h5>
-                            <p class="text-muted small">{{ $specialty['description'] }}</p>
+                            <h5 class="fw-bold  mt-2">{{ $specialty['title'] }}</h5>
+                            <p class="text-dark small">{{ $specialty['description'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -258,7 +258,7 @@ $team = [
 
 
                     <h5 class="fw-bold">{{ $member['name'] }}</h5>
-                    <p class="text-warning small mb-1">{{ $member['position'] }}</p>
+                    <p class="text-dark small mb-1">{{ $member['position'] }}</p>
                     <p class="text-muted small">{{ $member['description'] }}</p>
                 </div>
             </div>
