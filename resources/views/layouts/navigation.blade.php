@@ -1,6 +1,7 @@
 @extends('frontend.layout')
 @section('title', 'Về Quán TakeXX')
 @section('content')
+
 <div class="about-takexx text-gray-800" style="padding-top: 0; margin-top: 0;">
     <!-- HERO -->
     <section class="relative bg-gradient-to-br from-orange-500 via-rose-500 to-pink-600 text-white overflow-hidden" style="margin-top: 0;">
