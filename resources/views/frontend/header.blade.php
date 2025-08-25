@@ -27,7 +27,9 @@
                         </div>
 
                         <!-- Gợi ý -->
-                        <ul id="autocompleteList" class="list-group position-absolute w-100 z-3 mt-1 bg-white rounded"></ul>
+                        <ul id="autocompleteList" class="list-group position-absolute w-100 z-3 mt-1 bg-white rounded" style="max-height: 300px; overflow:auto; box-shadow:0 8px 20px rgba(0,0,0,.15);
+                        z-index: 1051;
+                        "></ul>
                     </form>
                 </div>
 
@@ -60,7 +62,7 @@
                                         <i class="fas fa-id-badge me-2"></i>Hồ sơ
                                     </a>
                                 </div>
-                            
+
                             </div>
 
                             @else
@@ -187,6 +189,45 @@
 </header>
 
 <!-- Required CSS for styling -->
+<style>
+    /* Đảm bảo dropdown tìm kiếm nằm trên menu và che nội dung dưới */
+    .top-header { position: relative; z-index: 1050; }
+    .navigation { position: relative; z-index: 1000; }
+
+    /* CSS cho header - đảm bảo nav-link có màu đen */
+    .header .nav-link {
+        color: #000000 !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease;
+    }
+
+    .header .nav-link:hover {
+        color: #333333 !important;
+        transform: translateY(-2px);
+    }
+
+    /* CSS cho dropdown menu trong header */
+    .header .dropdown-menu .dropdown-item {
+        color: #000000 !important;
+    }
+
+    .header .dropdown-menu .dropdown-item:hover {
+        background-color: #f8f9fa !important;
+        color: #333333 !important;
+    }
+
+    /* CSS cho user actions buttons */
+    .header .btn-outline-light {
+        color: #000000 !important;
+        border-color: #000000 !important;
+        background-color: transparent !important;
+    }
+
+    .header .btn-outline-light:hover {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+    }
+</style>
 
 
 <!-- Required JavaScript -->

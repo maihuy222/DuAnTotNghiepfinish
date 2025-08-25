@@ -1,6 +1,76 @@
 @extends('frontend.layout')
 @section('content')
 
+<style>
+    /* Tối ưu riêng cho slider đầu trang */
+    .main-swiper .banner-content {
+        min-height: 520px; /* tăng chiều cao để dễ căn giữa */
+    }
+    .main-swiper .banner-content .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* căn giữa theo trục dọc */
+    }
+    .main-swiper .banner-content .img-wrapper {
+        display: flex;
+        align-items: center; /* căn giữa dọc ảnh trong cột */
+        justify-content: center; /* căn giữa ngang ảnh trong cột */
+    }
+    .main-swiper .banner-content .img-wrapper img {
+        width: 100%;
+        max-width: 520px; /* tăng kích thước ảnh tối đa */
+        height: auto;
+        object-fit: contain;
+    }
+
+    /* Responsive: giảm nhẹ kích thước trên màn hình nhỏ */
+    @media (max-width: 991.98px) {
+        .main-swiper .banner-content { min-height: 420px; }
+        .main-swiper .banner-content .img-wrapper img { max-width: 420px; }
+    }
+    @media (max-width: 575.98px) {
+        .main-swiper .banner-content { min-height: 360px; }
+        .main-swiper .banner-content .img-wrapper img { max-width: 320px; }
+    }
+
+    /* Toast thông báo góc dưới phải (dùng cho yêu thích) */
+    #notify-container-br {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-end;
+    }
+    .notify-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        min-width: 280px;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        color: #0f5132;
+        background: #d1e7dd;
+        border: 1px solid #badbcc;
+        animation: slideIn .25s ease-out;
+    }
+    .notify-card.error {
+        color: #842029;
+        background: #f8d7da;
+        border-color: #f5c2c7;
+    }
+    .notify-icon {
+        width: 28px; height: 28px; border-radius: 50%;
+        display: grid; place-items: center; background: #198754; color: #fff;
+    }
+    .notify-card.error .notify-icon { background: #dc3545; }
+    .notify-close { border: none; background: transparent; color: inherit; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
 <section class="py-3" style="background-image: url('images/background-pattern.jpg');background-repeat: no-repeat;background-size: cover;">
     <div class="container">
         <div class="row">
@@ -14,11 +84,11 @@
                             <div class="swiper-wrapper">
                                 @foreach($sliders as $slider)
                                 <div class="swiper-slide">
-                                    <div class="row banner-content p-5">
+                                    <div class="row banner-content p-5 align-items-center">
                                         <div class="content-wrapper col-md-7">
                                             <div class="categories my-3">100% natural</div>
                                             <h3 class="display-4">{{ $slider->title }}</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dignissim massa diam elementum.</p>
+                                            <p>Thực phẩm sạch đảm bảo sức khỏe cho bạn và gia đình.</p>
                                             <a href="{{ $slider->link }}" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 px-4 py-3 mt-3">Shop Now</a>
                                         </div>
                                         <div class="img-wrapper col-md-5">
@@ -41,7 +111,7 @@
                             <div class="content-wrapper col-md-7">
                                 <div class="categories sale mb-3 pb-3">20% off</div>
                                 <h3 class="banner-title">Fruits & Vegetables</h3>
-                                <a href="#" class="d-flex align-items-center nav-link">Shop Collection <svg width="24" height="24">
+                                <a href="{{ url('category/do-chay') }}" class="d-flex align-items-center nav-link">Shop Collection <svg width="24" height="24">
                                         <use xlink:href="#arrow-right"></use>
                                     </svg></a>
                             </div>
@@ -55,7 +125,7 @@
                             <div class="content-wrapper col-md-7">
                                 <div class="categories sale mb-3 pb-3">15% off</div>
                                 <h3 class="item-title">Baked Products</h3>
-                                <a href="#" class="d-flex align-items-center nav-link">Shop Collection <svg width="24" height="24">
+                                <a href="{{ url('category/trang-mieng') }}" class="d-flex align-items-center nav-link">Shop Collection <svg width="24" height="24">
                                         <use xlink:href="#arrow-right"></use>
                                     </svg></a>
                             </div>
@@ -150,12 +220,23 @@
 
                                             <div class="product-overlay d-flex align-items-center justify-content-center">
                                                 <div class="d-flex gap-2">
-                                                    <button class="btn btn-light btn-sm rounded-circle action-btn">
+                                                    <a href="{{ route('product.show', $product->slug) }}" class="btn btn-light btn-sm rounded-circle action-btn" title="Xem chi tiết">
                                                         <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-light btn-sm rounded-circle action-btn">
+                                                    </a>
+                                                    @auth
+                                                    @php
+                                                        $isFavorite = \App\Models\Favorite::where('user_id', Auth::id())
+                                                            ->where('product_id', $product->id)
+                                                            ->exists();
+                                                    @endphp
+                                                    <button type="button" class="btn btn-sm rounded-circle action-btn favorite-toggle {{ $isFavorite ? 'btn-danger' : 'btn-light' }}" data-product-id="{{ $product->id }}" title="{{ $isFavorite ? 'Bỏ yêu thích' : 'Thêm yêu thích' }}">
                                                         <i class="fas fa-heart"></i>
                                                     </button>
+                                                    @else
+                                                    <a href="{{ route('login') }}" class="btn btn-light btn-sm rounded-circle action-btn" title="Đăng nhập để yêu thích">
+                                                        <i class="fas fa-heart"></i>
+                                                    </a>
+                                                    @endauth
                                                 </div>
                                             </div>
 
@@ -309,22 +390,14 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
 
-                                        {{-- Nút yêu thích --}}
+                                        {{-- Nút yêu thích dùng AJAX đồng nhất --}}
                                         @auth
-                                        @php
-                                        $isFavorite = \App\Models\Favorite::where('user_id', Auth::id())
-                                        ->where('product_id', $product->id)
-                                        ->exists();
-                                        @endphp
-                                        <form action="{{ route('favorites.toggle') }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                            <button type="submit"
-                                                class="btn btn-sm rounded-circle action-btn {{ $isFavorite ? 'btn-danger' : 'btn-light' }}"
-                                                title="{{ $isFavorite ? 'Bỏ yêu thích' : 'Thêm yêu thích' }}">
-                                                <i class="fas fa-heart"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                            class="btn btn-light btn-sm rounded-circle action-btn favorite-toggle"
+                                            data-product-id="{{ $product->id }}"
+                                            title="Thêm yêu thích">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
                                         @else
                                         <a href="{{ route('login') }}"
                                             class="btn btn-light btn-sm rounded-circle action-btn"
@@ -424,7 +497,7 @@
                     <div class="col-md-6 p-4">
                         <div class="section-header">
                             <h2 class="section-title display-5 fw-bold">
-                                🚀 Giao hàng tận nơi <span class="text-danger">30 phút</span>
+                                🚀 Giao hàng tận nơi 
                             </h2>
                         </div>
                         <p class="lead">
@@ -488,12 +561,23 @@
 
                                     <div class="product-overlay d-flex align-items-center justify-content-center">
                                         <div class="d-flex gap-2">
-                                            <button class="btn btn-light btn-sm rounded-circle action-btn">
+                                            <a href="{{ route('product.show', $product->slug) }}" class="btn btn-light btn-sm rounded-circle action-btn" title="Xem chi tiết">
                                                 <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-light btn-sm rounded-circle action-btn">
+                                            </a>
+                                            @auth
+                                            @php
+                                                $isFavorite = \App\Models\Favorite::where('user_id', Auth::id())
+                                                    ->where('product_id', $product->id)
+                                                    ->exists();
+                                            @endphp
+                                            <button type="button" class="btn btn-sm rounded-circle action-btn favorite-toggle {{ $isFavorite ? 'btn-danger' : 'btn-light' }}" data-product-id="{{ $product->id }}" title="{{ $isFavorite ? 'Bỏ yêu thích' : 'Thêm yêu thích' }}">
                                                 <i class="fas fa-heart"></i>
                                             </button>
+                                            @else
+                                            <a href="{{ route('login') }}" class="btn btn-light btn-sm rounded-circle action-btn" title="Đăng nhập để yêu thích">
+                                                <i class="fas fa-heart"></i>
+                                            </a>
+                                            @endauth
                                         </div>
                                     </div>
 
@@ -602,12 +686,23 @@
 
                                     <div class="product-overlay d-flex align-items-center justify-content-center">
                                         <div class="d-flex gap-2">
-                                            <button class="btn btn-light btn-sm rounded-circle action-btn">
+                                            <a href="{{ route('product.show', $product->slug) }}" class="btn btn-light btn-sm rounded-circle action-btn" title="Xem chi tiết">
                                                 <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-light btn-sm rounded-circle action-btn">
+                                            </a>
+                                            @auth
+                                            @php
+                                                $isFavorite = \App\Models\Favorite::where('user_id', Auth::id())
+                                                    ->where('product_id', $product->id)
+                                                    ->exists();
+                                            @endphp
+                                            <button type="button" class="btn btn-sm rounded-circle action-btn favorite-toggle {{ $isFavorite ? 'btn-danger' : 'btn-light' }}" data-product-id="{{ $product->id }}" title="{{ $isFavorite ? 'Bỏ yêu thích' : 'Thêm yêu thích' }}">
                                                 <i class="fas fa-heart"></i>
                                             </button>
+                                            @else
+                                            <a href="{{ route('login') }}" class="btn btn-light btn-sm rounded-circle action-btn" title="Đăng nhập để yêu thích">
+                                                <i class="fas fa-heart"></i>
+                                            </a>
+                                            @endauth
                                         </div>
                                     </div>
 
@@ -843,9 +938,53 @@
         }, 5000);
     }
 
+    // Notification bottom-right for favorites
+    function ensureNotifyContainerBR() {
+        let container = document.getElementById('notify-container-br');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notify-container-br';
+            document.body.appendChild(container);
+        }
+        return container;
+    }
+
+    function showNotificationBR(message, type = 'success') {
+        const container = ensureNotifyContainerBR();
+        const card = document.createElement('div');
+        card.className = `notify-card ${type === 'error' ? 'error' : ''}`;
+        card.innerHTML = `
+            <span class="notify-icon">
+                <i class="fas ${type === 'error' ? 'fa-times' : 'fa-check'}"></i>
+            </span>
+            <span>${message}</span>
+            <button class="notify-close" aria-label="Đóng">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        container.appendChild(card);
+        const closer = card.querySelector('.notify-close');
+        closer.addEventListener('click', () => card.remove());
+        setTimeout(() => card.remove(), 4000);
+    }
+
     // Initialize Swiper (if not already initialized globally)
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof Swiper !== 'undefined') {
+            // Main header slider
+            new Swiper('.main-swiper', {
+                slidesPerView: 1,
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                }
+            });
+
             new Swiper('.products-carousel', {
                 slidesPerView: 1,
                 spaceBetween: 20,
@@ -873,6 +1012,43 @@
                 }
             });
         }
+
+        // Toggle yêu thích qua AJAX cho mọi nút .favorite-toggle
+        document.querySelectorAll('.favorite-toggle').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                fetch("{{ route('favorites.toggle') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ product_id: productId })
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Network response was not ok');
+                    return res.text();
+                })
+                .then((html) => {
+                    // Nếu server trả về redirect HTML, vẫn coi là thành công
+                    const isRemoving = btn.classList.contains('btn-danger');
+                    if (isRemoving) {
+                        showNotificationBR('Đã bỏ yêu thích sản phẩm', 'success');
+                        btn.classList.remove('btn-danger');
+                        btn.classList.add('btn-light');
+                        btn.setAttribute('title', 'Thêm yêu thích');
+                    } else {
+                        showNotificationBR('Đã thêm sản phẩm yêu thích', 'success');
+                        btn.classList.remove('btn-light');
+                        btn.classList.add('btn-danger');
+                        btn.setAttribute('title', 'Bỏ yêu thích');
+                    }
+                })
+                .catch(() => {
+                    showNotification('Có lỗi khi thêm yêu thích', 'error');
+                });
+            });
+        });
     });
 </script>
 @endsection

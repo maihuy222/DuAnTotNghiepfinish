@@ -47,12 +47,23 @@
 
                     <div class="product-overlay d-flex align-items-center justify-content-center">
                         <div class="d-flex gap-2">
-                            <button class="btn btn-light btn-sm rounded-circle action-btn">
+                            <a href="{{ route('product.show', $product->slug) }}" class="btn btn-light btn-sm rounded-circle action-btn" title="Xem chi tiết">
                                 <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-light btn-sm rounded-circle action-btn">
+                            </a>
+                            @auth
+                            @php
+                                $isFavorite = \App\Models\Favorite::where('user_id', Auth::id())
+                                    ->where('product_id', $product->id)
+                                    ->exists();
+                            @endphp
+                            <button type="button" class="btn btn-sm rounded-circle action-btn favorite-toggle {{ $isFavorite ? 'btn-danger' : 'btn-light' }}" data-product-id="{{ $product->id }}" title="{{ $isFavorite ? 'Bỏ yêu thích' : 'Thêm yêu thích' }}">
                                 <i class="fas fa-heart"></i>
                             </button>
+                            @else
+                            <a href="{{ route('login') }}" class="btn btn-light btn-sm rounded-circle action-btn" title="Đăng nhập để yêu thích">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                            @endauth
                         </div>
                     </div>
 
@@ -251,6 +262,80 @@
 </style>
 
 <!-- JavaScript -->
+<script>
+    function ensureNotifyContainerBR() {
+        let container = document.getElementById('notify-container-br');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notify-container-br';
+            container.style.position = 'fixed';
+            container.style.right = '20px';
+            container.style.bottom = '20px';
+            container.style.zIndex = '9999';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.gap = '10px';
+            container.style.alignItems = 'flex-end';
+            document.body.appendChild(container);
+        }
+        return container;
+    }
 
+    function toastBR(message, isError = false) {
+        const wrap = ensureNotifyContainerBR();
+        const card = document.createElement('div');
+        card.style.display = 'flex';
+        card.style.alignItems = 'center';
+        card.style.gap = '10px';
+        card.style.padding = '10px 14px';
+        card.style.minWidth = '280px';
+        card.style.borderRadius = '10px';
+        card.style.boxShadow = '0 10px 20px rgba(0,0,0,0.12)';
+        card.style.color = isError ? '#842029' : '#0f5132';
+        card.style.background = isError ? '#f8d7da' : '#d1e7dd';
+        card.style.border = '1px solid ' + (isError ? '#f5c2c7' : '#badbcc');
+        card.innerHTML = `
+            <span style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:${isError ? '#dc3545' : '#198754'};color:#fff">
+                <i class="fas ${isError ? 'fa-times' : 'fa-check'}"></i>
+            </span>
+            <span>${message}</span>
+            <button style="border:none;background:transparent;color:inherit"><i class="fas fa-times"></i></button>
+        `;
+        wrap.appendChild(card);
+        card.querySelector('button').addEventListener('click', () => card.remove());
+        setTimeout(() => card.remove(), 4000);
+    }
 
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.favorite-toggle').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                fetch("{{ route('favorites.toggle') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=\"csrf-token\"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ product_id: productId })
+                })
+                .then(res => { if (!res.ok) throw new Error(); return res.text(); })
+                .then(() => {
+                    const isRemoving = btn.classList.contains('btn-danger');
+                    if (isRemoving) {
+                        btn.classList.remove('btn-danger');
+                        btn.classList.add('btn-light');
+                        btn.title = 'Thêm yêu thích';
+                        toastBR('Đã bỏ yêu thích sản phẩm');
+                    } else {
+                        btn.classList.remove('btn-light');
+                        btn.classList.add('btn-danger');
+                        btn.title = 'Bỏ yêu thích';
+                        toastBR('Đã thêm sản phẩm yêu thích');
+                    }
+                })
+                .catch(() => toastBR('Có lỗi xảy ra', true));
+            });
+        });
+    });
+</script>
 @endsection
