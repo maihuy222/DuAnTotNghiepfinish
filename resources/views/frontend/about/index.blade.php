@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('frontend.layout')
 
 @section('title', 'Về TakeXX - Nơi Vị Ngon Lên Tiếng')
 
