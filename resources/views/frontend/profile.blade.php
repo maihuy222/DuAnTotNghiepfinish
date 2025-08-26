@@ -58,27 +58,27 @@
                 </div>
 
                 {{-- Tab Mật khẩu --}}
-                <div class="tab-pane fade" id="tab-password">
-                    <form action="{{ url('/profile/change-password') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label">Mật khẩu hiện tại</label>
-                            <input type="password" name="current_password" class="form-control" required>
-                        </div>
+               <div class="tab-pane fade" id="tab-password">
+    <form action="{{ route('profile.changePassword') }}" method="POST">
+        @csrf
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu hiện tại</label>
+            <input type="password" name="current_password" class="form-control" required>
+        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Mật khẩu mới</label>
-                            <input type="password" name="new_password" class="form-control" required>
-                        </div>
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu mới</label>
+            <input type="password" name="new_password" class="form-control" required>
+        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Xác nhận mật khẩu mới</label>
-                            <input type="password" name="confirm_password" class="form-control" required>
-                        </div>
+        <div class="mb-3">
+            <label class="form-label">Xác nhận mật khẩu mới</label>
+            <input type="password" name="new_password_confirmation" class="form-control" required>
+        </div>
 
-                        <button type="submit" class="btn btn-warning">Đổi mật khẩu</button>
-                    </form>
-                </div>
+        <button type="submit" class="btn btn-warning">Đổi mật khẩu</button>
+    </form>
+</div>
 
                 {{-- Tab Đơn hàng --}}
                 <div class="tab-pane fade" id="tab-orders">

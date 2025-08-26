@@ -11,13 +11,32 @@ use App\Models\Product;
 use App\Models\Sizes;
 
 class OrderController extends Controller
-{
+{ 
+    //Lấy tất cả đơn hàng từ bảng orders.
+
+// Dùng with('user') để eager load user liên quan (tránh N+1 query).
+
+// Sắp xếp theo thời gian mới nhất (desc).
+
+// Gửi $orders sang view admin.orders.index để hiển thị danh sách.
     public function index()
     {
         $orders = Order::with('user')->orderBy('created_at', 'desc')->get();
         return view('admin.orders.index', compact('orders'));
     }
+// /👉 Ý nghĩa:
 
+// Tìm đơn hàng theo id, nếu không có → báo lỗi 404 (findOrFail).
+
+// Eager load các quan hệ:
+
+// user (người đặt)
+
+// details.product (sản phẩm trong chi tiết đơn hàng)
+
+// details.size (size sản phẩm nếu có)
+
+// Trả về view admin.orders.show để hiển thị chi tiết đơn hàng.
     public function show($id)
     {
         $order = Order::with(['user', 'details.product', 'details.size'])->findOrFail($id);

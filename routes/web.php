@@ -118,6 +118,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/vnpay/checkout', [PaymentController::class, 'vnpayRedirect'])->name('vnpay.checkout');
     Route::get('/vnpay/return', [PaymentController::class, 'vnpayCallback'])->name('vnpay.return');
 });;
+
+// Route::middleware(['auth']): đảm bảo chỉ những user đăng nhập mới vào được phần này.
+
+// orders.index: hiển thị danh sách đơn hàng của user (chỉ hiện đơn của chính họ).
+
+// orders.show: hiển thị chi tiết đơn hàng (sản phẩm, số lượng, tổng tiền, trạng thái).
+
+// orders.cancel: user gửi request hủy đơn hàng (POST để tránh lộ URL khi submit).
+// 👉 Đây là phần "hủy đơn hàng" mà em hỏi.
 Route::middleware(['auth'])->group(function () {
     Route::get('/orders', [UserOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [UserOrderController::class, 'show'])->name('orders.show');
@@ -125,7 +134,25 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+// prefix('admin'): tất cả URL bắt đầu bằng /admin/...
 
+// middleware('admin.auth'): chỉ admin đăng nhập mới vào được.
+
+// 👉 Các chức năng:
+
+// admin.orders.index: danh sách toàn bộ đơn hàng của hệ thống.
+
+// admin.orders.create: form tạo đơn hàng mới (ít dùng, thường do khách đặt, nhưng admin vẫn có quyền thêm).
+
+// admin.orders.store: xử lý lưu đơn hàng admin vừa tạo.
+
+// admin.orders.show: chi tiết một đơn hàng cụ thể.
+
+// admin.orders.updateStatus: Xác nhận / thay đổi trạng thái đơn hàng (pending → confirmed → shipping → completed). Đây chính là phần "xác nhận đơn hàng" mà em hỏi.
+
+// orders.reorder: tạo lại đơn hàng dựa trên đơn cũ (tái đặt hàng).
+
+// admin.orders.destroy: admin xóa đơn hàng khỏi hệ thống.
 Route::prefix('admin')->middleware('admin.auth')->group(function () {
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/create', [AdminOrderController::class, 'create'])->name('admin.orders.create');
